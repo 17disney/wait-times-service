@@ -1,7 +1,7 @@
 const Service = require('egg').Service
 
 class DestinationsService extends Service {
-  async getByLocal(local) {
+  async getDestinations(local, type) {
     let find = {
       local
     }
@@ -11,7 +11,29 @@ class DestinationsService extends Service {
       date: 0
     })
 
-    return data
+    let destList = []
+    for (let item of data.added) {
+      if (item.type === type) {
+        destList.push(item)
+      }
+    }
+
+    return destList
+  }
+
+  async getFacetGroups(local) {
+    let find = {
+      local
+    }
+
+    let data = await this.ctx.model.ScanDestination.findOne(find, {
+      _id: 0,
+      local: 0,
+      date: 0,
+      added: 0
+    })
+
+    return data.facetGroups
   }
 }
 
