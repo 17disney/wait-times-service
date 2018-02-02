@@ -4,22 +4,29 @@ const Controller = require('egg').Controller
 class AttractionController extends Controller {
   async index() {
     const { ctx, service } = this
-    const params = ctx.params
-    let { date, local } = params
-    console.log(service.attraction)
-    ctx.body = await service.attraction.getByDate(local, date)
+    let { id = 'all' } = ctx.query
+    let { date, local } = ctx.params
+
+    if (id === 'all') {
+      // 查询所有
+      ctx.body = await service.attraction.getAllByDate(local, date)
+    } else {
+      // 查询单独项目
+      ctx.body = await service.attraction.getById(local, date, id)
+    }
   }
 
+  // 项目范围查找
   async search() {
     const { ctx, service } = this
-    const params = ctx.params
-    let { date, local } = params
-
+    let { date, local } = ctx.params
+    let { id, st, et } = ctx.query
     let find = {
       date,
-      local
+      local,
+      id
     }
-    ctx.body = await service.explorer.calendar.findOne(find)
+    ctx.body = await service.attraction.getRangById(local, date, id, st, et)
   }
 }
 

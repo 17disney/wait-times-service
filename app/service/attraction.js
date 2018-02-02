@@ -1,8 +1,51 @@
 const Service = require('egg').Service
 
 class AttractionService extends Service {
-  async findOne(find) {
-    const data = await this.ctx.model.ScanCalendar.findOne(find, { _id: 0 })
+  async getAllByDate(local, date) {
+    let find = {
+      local,
+      date
+    }
+    const data = await this.ctx.model.DsAttraction.find(find, {
+      _id: 0,
+      waitList: 0,
+      fpList: 0,
+      schedule: 0,
+      waitMaxList: 0
+    })
+    return data
+  }
+
+  async getById(local, date, id) {
+    let find = {
+      local,
+      date,
+      id
+    }
+    const data = await this.ctx.model.DsAttraction.find(find, {
+      _id: 0,
+      schedule: 0
+    })
+    return data
+  }
+
+  // 项目范围查找
+  async getRangById(local, date, id, st, et) {
+    let find = {
+      local,
+      id,
+      date: {
+        $gte: st,
+        $lte: et
+      }
+    }
+    const data = await this.ctx.model.DsAttraction.find(find, {
+      _id: 0,
+      waitList: 0,
+      fpList: 0,
+      schedule: 0,
+      waitMaxList: 0
+    })
     return data
   }
 }
