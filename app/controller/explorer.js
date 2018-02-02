@@ -1,19 +1,29 @@
-// const Controller = require('egg').Controller
+const Controller = require('egg').Controller
 
-// class ExplorerController extends Controller {
-//   async index(params) {
-//     // console.log(this.service.scan_calendar)
-//     let data = await this.service.scan_calendar.show()
-//     ctx.body = data
-//   }
-// }
+class ExplorerController extends Controller {
+  // 演出时间表
+  async calendars() {
+    const { ctx, service  } = this
+    const params = ctx.params
+    let { date, local } = params
 
-// module.exports = ExplorerController
-
-exports.index = async ctx => {
-  let find = {
-    date: '2018-02-02',
-    local: 'shanghai'
+    let find = {
+      date,
+      local
+    }
+    ctx.body = await service.explorer.calendar.findOne(find)
   }
-  ctx.body = await ctx.model.ScanCalendar.find(find)
+
+  // 字典
+  async destinations() {
+    const { ctx, service } = this
+    const query = ctx.query
+    const params = ctx.params
+    let { local } = params
+    console.log(local)
+
+    ctx.body = await ctx.service.explorer.destinations.getByLocal(local)
+  }
 }
+
+module.exports = ExplorerController
