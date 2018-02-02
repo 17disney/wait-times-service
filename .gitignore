@@ -3,3 +3,5 @@ _notes
 .DS_Store
 node_modules
 config/*.js
+
+run
