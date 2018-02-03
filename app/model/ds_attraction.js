@@ -3,16 +3,18 @@ module.exports = app => {
   const DsAttractionSchema = new mongoose.Schema({
     date: { type: String },
     local: { type: String },
-    schedule: { type: Object },
+    id: { type: String },
     startTime: { type: Date },
     endTime: { type: Date },
     status: { type: String },
-    waitList: { type: Array },
-    fpList: { type: Array },
+
     waitMax: { type: Number },
     waitAvg: { type: Number },
-    waitMaxList: { type: Array },
+    waitList: { type: Array },
     waitHour: { type: Array },
+    waitMaxList: { type: Array },
+
+    fpList: { type: Array },
     utime: { type: Number }
   })
 
