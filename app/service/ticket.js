@@ -1,22 +1,33 @@
 const Service = require('egg').Service
 
 class TicketService extends Service {
-  // 按地址日期查询所有项目
+  async getByLocalRang(local, st, et) {
+    console.log
+    let find = {
+      local,
+      date: {
+        $gte: st,
+        $lte: et
+      }
+    }
+    const data = await this.ctx.model.ScanTicket.find(find, {
+      _id: 0,
+      availableList: 0
+    })
+    return data
+  }
+
   async getByLocalDate(local, date) {
+    console.log
     let find = {
       local,
       date
     }
     const data = await this.ctx.model.ScanTicket.find(find, {
-      _id: 0,
-      waitList: 0,
-      waitMaxList: 0,
-      fpList: 0,
-      schedule: 0
+      _id: 0
     })
     return data
   }
-
 }
 
 module.exports = TicketService

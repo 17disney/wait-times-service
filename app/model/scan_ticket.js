@@ -1,6 +1,6 @@
 module.exports = app => {
   const mongoose = app.mongoose
-  const DsTicketSchema = new mongoose.Schema({
+  const ScanTicketSchema = new mongoose.Schema({
     date: { type: String },
     local: { type: String },
 
@@ -13,5 +13,5 @@ module.exports = app => {
     utime: { type: Number }
   })
 
-  return mongoose.model('DsTicket', DsTicketSchema, 'ds_tickets')
+  return mongoose.model('ScanTicket', ScanTicketSchema, 'scan_tickets')
 }
