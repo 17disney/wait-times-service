@@ -17,6 +17,22 @@ class AttractionService extends Service {
     return data
   }
 
+  async getByLocalToday(local, date) {
+    let find = {
+      local,
+      date
+    }
+    const data = await this.ctx.model.DsAttraction.find(find, {
+      _id: 0,
+      // waitList: 0,
+      waitList: { $slice: -1 },
+      waitMaxList: 0,
+      fpList: 0,
+      schedule: 0
+    })
+    return data
+  }
+
   // 按地址日期ID查询项目
   async getByLocalDateId(local, date, id) {
     let find = {
