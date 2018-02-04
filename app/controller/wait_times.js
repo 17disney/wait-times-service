@@ -1,12 +1,20 @@
 const Controller = require('egg').Controller
 const moment = require('moment')
+const today = moment().format('YYYY-MM-DD')
 
+// 等待时间查询
 class WaitTimesController extends Controller {
   async park() {
     const { ctx, service } = this
     let { date, local } = ctx.params
 
-    ctx.body = await service.park.getByLocalDate(local, date)
+    let data
+    if (date === today) {
+      data = await service.park.getByLocalToday(local, date)
+    } else {
+      data = await service.park.getByLocalDate(local, date)
+    }
+    ctx.body = data
   }
 
   async attractionsId() {
@@ -30,13 +38,11 @@ class WaitTimesController extends Controller {
     }
 
     let data
-    const today = moment().format('YYYY-MM-DD')
     if (date === today) {
       data = await service.attraction.getByLocalToday(local, date)
     } else {
       data = await service.attraction.getByLocalDate(local, date)
     }
-
     ctx.body = data
   }
 }

@@ -1,4 +1,5 @@
 const Service = require('egg').Service
+const moment = require('moment')
 
 class ParkService extends Service {
   async getByLocalDate(local, date) {
@@ -6,10 +7,23 @@ class ParkService extends Service {
       local,
       date
     }
-    const data = await this.ctx.model.DsPark.findOne(find, {
+    let data = await this.ctx.model.DsPark.findOne(find, {
       _id: 0,
       markList: 0,
       flowList: 0
+    })
+    return data
+  }
+
+  async getByLocalToday(local, date) {
+    let find = {
+      local,
+      date
+    }
+    let data = await this.ctx.model.DsPark.findOne(find, {
+      _id: 0,
+      markList: { $slice: -1 },
+      flowList: { $slice: -1 }
     })
     return data
   }
@@ -23,7 +37,7 @@ class ParkService extends Service {
         $lte: et
       }
     }
-    const data = await this.ctx.model.DsPark.find(find, {
+    let data = await this.ctx.model.DsPark.find(find, {
       _id: 0,
       markList: 0,
       flowList: 0

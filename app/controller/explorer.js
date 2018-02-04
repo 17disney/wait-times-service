@@ -1,5 +1,6 @@
 const Controller = require('egg').Controller
 
+// 静态资源控制器
 class ExplorerController extends Controller {
   // 演出时间表
   async calendars() {
@@ -7,11 +8,7 @@ class ExplorerController extends Controller {
     const params = ctx.params
     let { date, local } = params
 
-    let find = {
-      date,
-      local
-    }
-    ctx.body = await service.explorer.calendar.findOne(find)
+    ctx.body = await service.explorer.calendar.getByLocalDate(local, date)
   }
 
   // 字典

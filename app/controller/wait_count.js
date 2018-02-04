@@ -1,6 +1,6 @@
 const Controller = require('egg').Controller
 
-// 项目查询
+// 等待统计查询
 class WaitCountController extends Controller {
   async park() {
     const { ctx, service } = this

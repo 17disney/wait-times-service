@@ -7,7 +7,7 @@ class AttractionService extends Service {
       local,
       date
     }
-    const data = await this.ctx.model.DsAttraction.find(find, {
+    let data = await this.ctx.model.DsAttraction.find(find, {
       _id: 0,
       waitList: 0,
       waitMaxList: 0,
@@ -22,9 +22,8 @@ class AttractionService extends Service {
       local,
       date
     }
-    const data = await this.ctx.model.DsAttraction.find(find, {
+    let data = await this.ctx.model.DsAttraction.find(find, {
       _id: 0,
-      // waitList: 0,
       waitList: { $slice: -1 },
       waitMaxList: 0,
       fpList: 0,
@@ -40,7 +39,7 @@ class AttractionService extends Service {
       date,
       id
     }
-    const data = await this.ctx.model.DsAttraction.findOne(find, {
+    let data = await this.ctx.model.DsAttraction.findOne(find, {
       _id: 0,
       schedule: 0
     })
@@ -57,7 +56,7 @@ class AttractionService extends Service {
         $lte: et
       }
     }
-    const data = await this.ctx.model.DsAttraction.find(find, {
+    let data = await this.ctx.model.DsAttraction.find(find, {
       _id: 0,
       id: 0,
       waitList: 0,

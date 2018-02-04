@@ -2,7 +2,7 @@ const Controller = require('egg').Controller
 
 class HomeController extends Controller {
   async index() {
-    this.ctx.body = 'Disney-api'
+    this.ctx.body = { info: 'Disney-api' }
   }
 }
 
