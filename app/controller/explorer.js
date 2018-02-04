@@ -48,6 +48,14 @@ class ExplorerController extends Controller {
 
     ctx.body = await ctx.service.explorer.destinations.getFacetGroups(local)
   }
+
+  async schedules() {
+    const { ctx, service } = this
+    const params = ctx.params
+    let { local, date } = params
+
+    ctx.body = await ctx.service.explorer.schedules.getByLocalDate(local, date)
+  }
 }
 
 module.exports = ExplorerController
