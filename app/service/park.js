@@ -6,7 +6,7 @@ class ParkService extends Service {
       local,
       date
     }
-    const data = await this.ctx.model.DsPark.find(find, {
+    const data = await this.ctx.model.DsPark.findOne(find, {
       _id: 0,
       markList: 0,
       flowList: 0

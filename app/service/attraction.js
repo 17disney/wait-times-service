@@ -24,7 +24,7 @@ class AttractionService extends Service {
       date,
       id
     }
-    const data = await this.ctx.model.DsAttraction.find(find, {
+    const data = await this.ctx.model.DsAttraction.findOne(find, {
       _id: 0,
       schedule: 0
     })
