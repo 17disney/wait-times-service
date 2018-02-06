@@ -26,7 +26,7 @@ class AttractionService extends Service {
       _id: 0,
       waitList: { $slice: -1 },
       waitMaxList: 0,
-      fpList: 0,
+      fpList: { $slice: -1 },
       schedule: 0
     })
     return data
