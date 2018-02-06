@@ -6,7 +6,6 @@ module.exports = app => {
   router.get('/', controller.home.index)
 
   router.get('/explorer-service/schedules/:local/:date', controller.explorer.schedules)
-  router.get('/explorer-service/calendar/:local/:date', controller.explorer.calendars)
   router.get('/explorer-service/destinations/:local', controller.explorer.destinations)
   router.get('/explorer-service/facet-groups/:local', controller.explorer.facetGroups)
 

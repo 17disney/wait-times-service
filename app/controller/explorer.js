@@ -2,15 +2,6 @@ const Controller = require('egg').Controller
 
 // 静态资源控制器
 class ExplorerController extends Controller {
-  // 演出时间表
-  async calendars() {
-    const { ctx, service } = this
-    const params = ctx.params
-    let { date, local } = params
-
-    ctx.body = await service.explorer.calendar.getByLocalDate(local, date)
-  }
-
   // 字典
   async destinations() {
     const { ctx, service } = this

@@ -66,6 +66,25 @@ class AttractionService extends Service {
     })
     return data
   }
+
+  // 项目范围排序
+  async getByLocalIdSort(local, id, sort) {
+    let find = {
+      local,
+      id
+    }
+    let data = await this.ctx.model.DsAttraction.find(find, {
+      _id: 0,
+      id: 0,
+      waitList: 0,
+      fpList: 0,
+      schedule: 0,
+      waitMaxList: 0
+    })
+      .sort({ waitAvg: -1 })
+      .limit(20)
+    return data
+  }
 }
 
 module.exports = AttractionService
