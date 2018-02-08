@@ -45,7 +45,12 @@ class ExplorerController extends Controller {
     const params = ctx.params
     let { local, date } = params
 
-    ctx.body = await ctx.service.explorer.schedules.getByLocalDate(local, date)
+    let data = await ctx.service.explorer.schedules.getByLocalDate(local, date)
+    if (data.length === 2) {
+      ctx.body = data
+    } else {
+      throw new Error('时间表未更新')
+    }
   }
 }
 
