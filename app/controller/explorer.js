@@ -1,4 +1,5 @@
 const Controller = require('egg').Controller
+const moment = require('moment')
 
 // 静态资源控制器
 class ExplorerController extends Controller {
@@ -43,7 +44,8 @@ class ExplorerController extends Controller {
   async schedules() {
     const { ctx, service } = this
     const params = ctx.params
-    let { local, date } = params
+    let today = moment().format('YYYY-MM-DD')
+    let { local, date = today } = params
 
     let data = await ctx.service.explorer.schedules.getByLocalDate(local, date)
     if (data.length === 2) {

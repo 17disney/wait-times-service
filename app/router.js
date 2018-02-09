@@ -9,6 +9,7 @@ module.exports = app => {
   router.get('/explorer-service/destinations/:local', controller.explorer.destinations)
   router.get('/explorer-service/facet-groups/:local', controller.explorer.facetGroups)
 
+  router.get('/wait-times/park/:local', controller.waitTimes.parkToday)
   router.get('/wait-times/park/:local/:date', controller.waitTimes.park)
   router.get('/wait-times/attractions/:local/:date', controller.waitTimes.attractions)
   router.get('/wait-times/attractions/:local/:date/:id', controller.waitTimes.attractionsId)
