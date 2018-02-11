@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --port=27101 --daemon --title=disney-api-v2",
-    "docker": "egg-scripts start --port=27101 --title=disney-api-v2",
+    "docker": "egg-bin dev --port=27101 --title=disney-api-v2",
     "stop": "egg-scripts stop",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",

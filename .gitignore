@@ -2,6 +2,6 @@ _notes
 *.log
 .DS_Store
 node_modules
-config/*.js
+config/config.*.js
 logs
 run
