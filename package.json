@@ -1,6 +1,6 @@
 {
   "name": "disney-api",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "private": true,
   "dependencies": {
@@ -25,7 +25,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --port=27101 --daemon --title=disney-api-v2",
-    "docker": "egg-scripts start --port=27101 --title=disney-api-v2",
+    "docker": "egg-scripts start --port=80 --title=disney-api-v2",
     "stop": "egg-scripts stop",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
