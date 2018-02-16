@@ -2,7 +2,7 @@ _notes
 *.log
 .DS_Store
 node_modules
-app/config/config.*.js
+config/config.*.js
 logs
 run
 .idea

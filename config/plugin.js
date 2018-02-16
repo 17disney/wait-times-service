@@ -1,5 +1,3 @@
-const path = require('path')
-
 exports.mongoose = {
   enable: true,
   package: 'egg-mongoose',
@@ -10,7 +8,7 @@ exports.validate = {
   package: 'egg-validate'
 }
 
-exports.alinode = {
-  enable: true,
-  package: 'egg-alinode',
-};
+// exports.alinode = {
+//   enable: true,
+//   package: 'egg-alinode',
+// };
