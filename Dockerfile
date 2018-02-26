@@ -5,6 +5,4 @@ WORKDIR /app
 
 RUN npm install --registry=https://registry.npm.taobao.org
 
-EXPOSE 27101
-
-CMD ["npm", "run", "docker"]
+EXPOSE 80
