@@ -6,9 +6,7 @@ class ExplorerController extends Controller {
   // 字典
   async destinations() {
     const { ctx, service } = this
-    const query = ctx.query
-    const params = ctx.params
-    let { local } = params
+    let { local } = ctx.params
     let { type } = ctx.query
 
     ctx.body = await ctx.service.explorer.destinations.getDestinations(

@@ -6,8 +6,8 @@ module.exports = app => {
   router.get('/', controller.home.index)
 
   router.get('/explorer-service/schedules/:local/:date', controller.explorer.schedules)
-  router.get('/explorer-service/destinations/:local', controller.explorer.destinations)
-  router.get('/explorer-service/facet-groups/:local', controller.explorer.facetGroups)
+  // router.get('/explorer-service/destinations/:local', controller.explorer.destinations)
+  // router.get('/explorer-service/facet-groups/:local', controller.explorer.facetGroups)
 
   router.get('/wait-times/park/:local/:date', controller.waitTimes.park)
   router.get('/wait-times/attractions/:local/:date', controller.waitTimes.attractions)

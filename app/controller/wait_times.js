@@ -1,6 +1,6 @@
 const Controller = require('egg').Controller
 const moment = require('moment')
-const { localList } = require('../common/park-list')
+const { localList } = require('../util/park-list')
 
 // 等待时间查询
 class WaitTimesController extends Controller {
