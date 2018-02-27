@@ -1,11 +1,12 @@
 const path = require('path')
 
-exports.mongoose = {
-  enable: true,
-  package: 'egg-mongoose',
-}
-
-exports.validate = {
-  enable: true,
-  package: 'egg-validate'
+module.exports = {
+  mongoose: {
+    enable: true,
+    package: 'egg-mongoose'
+  },
+  validate: {
+    enable: true,
+    package: 'egg-validate'
+  }
 }
