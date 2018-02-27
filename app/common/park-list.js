@@ -33,4 +33,5 @@ const parkList = [
   }
 ]
 
-module.exports = parkList
+exports.localList = localList = parkList.map(_=>{return _.local})
+exports.parkList = parkList

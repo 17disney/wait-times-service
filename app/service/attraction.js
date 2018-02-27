@@ -17,22 +17,22 @@ class AttractionService extends Service {
     return data
   }
 
-  async getByLocalToday(local, date) {
+  // 获取最新
+  async getByLocalToday(local) {
     let find = {
-      local,
-      date
+      local
     }
-    let data = await this.ctx.model.DsAttraction.find(find, {
+    let data = await this.ctx.model.DsAttraction.findOne(find, {
       _id: 0,
       waitList: { $slice: -1 },
       waitMaxList: 0,
       fpList: { $slice: -1 },
       schedule: 0
-    })
+    }).sort({ date: -1 })
     return data
   }
 
-  // 按地址日期ID查询项目
+  // 按项目ID日期查询
   async getByLocalDateId(local, date, id) {
     let find = {
       local,
@@ -46,7 +46,7 @@ class AttractionService extends Service {
     return data
   }
 
-  // 日期范围查找
+  // 项目日期范围查找
   async getByLocalRangId(local, id, st, et, sort) {
     let find = {
       local,

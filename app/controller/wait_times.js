@@ -1,60 +1,57 @@
 const Controller = require('egg').Controller
 const moment = require('moment')
+const { localList } = require('../common/park-list')
 
 // 等待时间查询
 class WaitTimesController extends Controller {
-  // 获取实时
-  async parkToday() {
-    const { ctx, service } = this
-    let date = moment().format('YYYY-MM-DD')
-    let { local } = ctx.params
+  constructor(ctx) {
+    super(ctx)
+    this.today = moment().format('YYYY-MM-DD')
 
-    let data = await service.park.getByLocalToday(local, date)
-    ctx.body = data
+    this.baseRule = {
+      date: { type: 'date', required: true },
+      local: { type: 'enum', values: localList, required: true }
+    }
   }
 
+  // 获取乐园
   async park() {
     const { ctx, service } = this
-    let today = moment().format('YYYY-MM-DD')
-    let { date = today, local } = ctx.params
+    ctx.validate(this.baseRule, ctx.params)
 
-    let data
-    if (date === today) {
-      data = await service.park.getByLocalToday(local, date)
+    let { local, date } = ctx.params
+
+    if (date === this.today) {
+      ctx.body = await service.park.getByLocalToday(local)
     } else {
-      data = await service.park.getByLocalDate(local, date)
+      ctx.body = await service.park.getByLocalDate(local, date)
     }
-    ctx.body = data
   }
 
-  async attractionsId() {
-    const { ctx, service } = this
-    let { date, local, id } = ctx.params
-    let find = {
-      date,
-      local,
-      id
-    }
-    ctx.body = await service.attraction.getByLocalDateId(local, date, id)
-  }
-
+  // 获取所有项目
   async attractions() {
     const { ctx, service } = this
-    let today = moment().format('YYYY-MM-DD')
+    ctx.validate(this.baseRule, ctx.params)
 
     let { date, local } = ctx.params
-    let find = {
-      date,
-      local
-    }
 
-    let data
-    if (date === today) {
-      data = await service.attraction.getByLocalToday(local, date)
+    if (date === this.today) {
+      ctx.body = await service.attraction.getByLocalToday(local)
     } else {
-      data = await service.attraction.getByLocalDate(local, date)
+      ctx.body = await service.attraction.getByLocalDate(local, date)
     }
-    ctx.body = data
+  }
+
+  // 获取项目详情
+  async attractionsId() {
+    const { ctx, service } = this
+    const rule = this.baseRule
+    rule.id = { type: 'string', required: true }
+    ctx.validate(rule, ctx.params)
+
+    let { date, local, id } = ctx.params
+
+    ctx.body = await service.attraction.getByLocalDateId(local, date, id)
   }
 }
 

@@ -15,15 +15,16 @@ class ParkService extends Service {
     return data
   }
 
-  async getByLocalToday(local, date) {
+  async getByLocalToday(local) {
     let find = {
-      local,
-      date
+      local
     }
     let data = await this.ctx.model.DsPark.findOne(find, {
       _id: 0,
       markList: { $slice: -1 },
       flowList: { $slice: -1 }
+    }).sort({
+      date: -1
     })
     return data
   }
