@@ -22,7 +22,7 @@ class AttractionService extends Service {
     let find = {
       local
     }
-    let data = await this.ctx.model.DsAttraction.findOne(find, {
+    let data = await this.ctx.model.DsAttraction.find(find, {
       _id: 0,
       waitList: { $slice: -1 },
       waitMaxList: 0,
