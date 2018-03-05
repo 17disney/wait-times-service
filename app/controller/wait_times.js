@@ -22,7 +22,7 @@ class WaitTimesController extends Controller {
     let { local, date } = ctx.params
 
     if (date === this.today) {
-      ctx.body = await service.park.getByLocalToday(local)
+      ctx.body = await service.park.getByLocalToday(local, date)
     } else {
       ctx.body = await service.park.getByLocalDate(local, date)
     }

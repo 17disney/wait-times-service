@@ -18,9 +18,10 @@ class AttractionService extends Service {
   }
 
   // 获取最新
-  async getByLocalToday(local) {
+  async getByLocalToday(local, date) {
     let find = {
-      local
+      local,
+      date
     }
     let data = await this.ctx.model.DsAttraction.find(find, {
       _id: 0,
