@@ -23,7 +23,7 @@ class TicketService extends Service {
       local,
       date
     }
-    const data = await this.ctx.model.ScanTicket.find(find, {
+    const data = await this.ctx.model.ScanTicket.findOne(find, {
       _id: 0
     })
     return data

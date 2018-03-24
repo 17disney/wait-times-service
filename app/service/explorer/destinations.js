@@ -1,12 +1,9 @@
 const Service = require('egg').Service
 
 class DestinationsService extends Service {
-  async getDestinations(local, type) {
+  async getDestinationsRaw(local) {
     let find = {
-      local,
-      added: {
-        type
-      }
+      local
     }
     let data = await this.ctx.model.ScanDestination.findOne(find, {
       _id: 0,
@@ -14,29 +11,37 @@ class DestinationsService extends Service {
       date: 0
     })
 
-    let destList = []
-    // for (let item of data.added) {
-    //   if (item.type === type) {
-    //     destList.push(item)
-    //   }
-    // }
-
-    return destList
+    return data
   }
 
-  async getFacetGroups(local) {
+  async getDestinations(local, type) {
     let find = {
       local
     }
-
-    let data = await this.ctx.model.ScanDestination.findOne(find, {
+    let data = await this.ctx.model.DsDestination.find(find, {
       _id: 0,
       local: 0,
-      date: 0,
-      added: 0
+      date: 0
     })
 
-    return data.facetGroups
+    return data
+  }
+
+  async updateDestinationsId(id, data) {
+    let find = {
+      id
+    }
+    let ret = await this.ctx.model.DsDestination.update(
+      find,
+      {
+        $set: data
+      },
+      {
+        upsert: true
+      }
+    )
+
+    return ret
   }
 }
 

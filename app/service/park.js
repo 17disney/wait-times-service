@@ -15,6 +15,20 @@ class ParkService extends Service {
     return data
   }
 
+  async updateByLocalDate(find, data) {
+
+    let ret = await this.ctx.model.DsPark.update(
+      find,
+      {
+        $set: data
+      },
+      {
+        upsert: true
+      }
+    )
+    return ret
+  }
+
   async getByLocalToday(local) {
     let find = {
       local

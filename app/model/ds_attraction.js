@@ -14,6 +14,10 @@ module.exports = app => {
     waitHour: { type: Array },
     waitMaxList: { type: Array },
 
+    waitFt: {type:Number},
+    waitMath: {type:Array},
+    waitFtList: {type: Array},
+
     fpList: { type: Array },
     utime: { type: Number }
   })

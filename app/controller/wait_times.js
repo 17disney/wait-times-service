@@ -31,14 +31,19 @@ class WaitTimesController extends Controller {
   // 获取所有项目
   async attractions() {
     const { ctx, service } = this
+    let { raw } = ctx.query
     ctx.validate(this.baseRule, ctx.params)
 
     let { date, local } = ctx.params
 
-    if (date === this.today) {
-      ctx.body = await service.attraction.getByLocalToday(local, date)
+    if (raw) {
+      ctx.body = await service.attraction.getByLocalDateRaw(local, date)
     } else {
-      ctx.body = await service.attraction.getByLocalDate(local, date)
+      if (date === this.today) {
+        ctx.body = await service.attraction.getByLocalToday(local, date)
+      } else {
+        ctx.body = await service.attraction.getByLocalDate(local, date)
+      }
     }
   }
 

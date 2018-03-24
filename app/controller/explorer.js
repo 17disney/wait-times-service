@@ -4,43 +4,32 @@ const moment = require('moment')
 // 静态资源控制器
 class ExplorerController extends Controller {
   // 字典
-  async destinations() {
-    const { ctx, service } = this
+  async destinationsRaw() {
+    const { ctx } = this
     let { local } = ctx.params
-    let { type } = ctx.query
 
-    ctx.body = await ctx.service.explorer.destinations.getDestinations(
-      local,
-      type
-    )
+    ctx.body = await ctx.service.explorer.destinations.getDestinationsRaw(local)
   }
 
-  // 字典
   async destinations() {
-    const { ctx, service } = this
-    const query = ctx.query
-    const params = ctx.params
-    let { local } = params
-    let { type } = ctx.query
+    const { ctx } = this
+    let { local } = ctx.params
 
-    ctx.body = await ctx.service.explorer.destinations.getDestinations(
-      local,
-      type
-    )
+    ctx.body = await ctx.service.explorer.destinations.getDestinations(local)
   }
 
-  async facetGroups() {
-    const { ctx, service } = this
-    const query = ctx.query
-    const params = ctx.params
-    let { local } = params
-    let { type } = ctx.query
+  async updateDestinationsId() {
+    const { ctx } = this
+    let { id } = ctx.params
+    let data = ctx.request.body
 
-    ctx.body = await ctx.service.explorer.destinations.getFacetGroups(local)
+    await ctx.service.explorer.destinations.updateDestinationsId(id, data)
+    ctx.body = data
   }
 
+  // 时间表
   async schedules() {
-    const { ctx, service } = this
+    const { ctx } = this
     const params = ctx.params
     let today = moment().format('YYYY-MM-DD')
     let { local, date = today } = params
