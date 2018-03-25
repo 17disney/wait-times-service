@@ -4,8 +4,8 @@ module.exports = app => {
     date: { type: String },
     local: { type: String },
     id: { type: String },
-    startTime: { type: Date },
-    endTime: { type: Date },
+    startTime: { type: String },
+    endTime: { type: String },
     status: { type: String },
 
     waitMax: { type: Number },
