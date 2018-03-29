@@ -4,8 +4,8 @@ module.exports = app => {
     date: { type: String },
     local: { type: String },
     id: { type: String },
-    startTime: { type: Date },
-    endTime: { type: Date },
+    startTime: { type: String },
+    endTime: { type: String },
     status: { type: String },
 
     markMax: { type: Number },
@@ -13,15 +13,11 @@ module.exports = app => {
     markList: { type: Array },
     markHour: { type: Array },
     markMaxList: { type: Array },
-    markFt: { type: Number },
-    markMath: { type: Array },
 
     flowMax: { type: Number },
     flowAvg: { type: Number },
     flowList: { type: Array },
     flowHour: { type: Array },
-    flowFt: { type: Number },
-    flowMath: { type: Array },
 
     wea: { type: String },
     wind: { type: String },

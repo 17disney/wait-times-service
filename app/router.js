@@ -30,7 +30,7 @@ module.exports = app => {
   router.get('/ticket/available/:local', controller.ticket.available)
   router.get('/ticket/available/:local/:date', controller.ticket.availableDate)
 
-  router.put('/wait-forecast/park/:local/:date', controller.waitForecast.park)
+  // router.put('/wait-forecast/park/:local/:date', controller.waitForecast.park)
 
   // router.get('/wait-forecast/attractions/:local/:id', controller.forecast.attractionsId)
   // router.put('/wait-forecast/attractions/:local/:id', controller.waitForecast.attractionsId)

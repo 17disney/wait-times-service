@@ -9,8 +9,8 @@ class ParkService extends Service {
     }
     let data = await this.ctx.model.DsPark.findOne(find, {
       _id: 0,
-      markList: 0,
-      flowList: 0
+      // markList: 0,
+      // flowList: 0
     })
     return data
   }
@@ -35,8 +35,8 @@ class ParkService extends Service {
     }
     let data = await this.ctx.model.DsPark.findOne(find, {
       _id: 0,
-      markList: { $slice: -1 },
-      flowList: { $slice: -1 }
+      // markList: { $slice: -1 },
+      // flowList: { $slice: -1 }
     }).sort({
       date: -1
     })
