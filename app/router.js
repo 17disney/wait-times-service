@@ -10,6 +10,9 @@ module.exports = app => {
 
   router.get('/explorer/schedules/:local/:date', controller.explorer.schedules)
   router.get('/explorer/schedules-pre/:local', controller.explorer.schedulesPre)
+  router.get('/explorer/schedules-list/:id', controller.explorer.schedulesList)
+
+  // router.get('/explorer/schedules-update/:local', controller.explorer.updateAll)
   router.get('/explorer/destinations-raw/:local', controller.explorer.destinationsRaw)
 
   router.get('/explorer/destinations/:local', controller.explorer.destinations)

@@ -32,12 +32,8 @@ class ExplorerController extends Controller {
   // 时间表
   async schedulesPre() {
     const { ctx } = this
-    const params = ctx.params
     let today = moment().format('YYYY-MM-DD')
-    let { local, date = today } = params
-
-    console.log(date)
-
+    let { local, date = today } = ctx.params
     let data = await ctx.service.explorer.schedules.getPreByLocalDate(
       local,
       date
@@ -49,12 +45,34 @@ class ExplorerController extends Controller {
     }
   }
 
+  // 项目时间表
+  async schedulesList() {
+    const { ctx } = this
+    const { st, et } = ctx.query
+    let { id } = ctx.params
+    let data = await ctx.service.explorer.schedules.getByRangId(id, st, et)
+    ctx.body = data
+  }
+
+  async updateAll() {
+    const { ctx } = this
+    let date = '2017-04-17'
+    let today = '2018-03-30'
+    while(date !== today) {
+      await superAgent.get(
+        `http://127.0.0.1:7001/explorer/schedules/shanghai/${date}`
+      )
+      console.log(date)
+      date = moment(date, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD')
+    }
+    ctx.body = 'ok'
+  }
+
+
   async schedules() {
     const { ctx } = this
     var data
-    const params = ctx.params
-    let today = moment().format('YYYY-MM-DD')
-    let { local, date = today } = params
+    let { local, date } = ctx.params
 
     data = await ctx.service.explorer.schedules.getByLocalDate(local, date)
     // 从原始时间表查找并更新至新表
