@@ -1,6 +1,7 @@
 const Controller = require('egg').Controller
 const moment = require('moment')
-const { lineToObject } = require('../util/api_tool')
+const { lineToObject, objectToLine } = require('../util/api_tool')
+const superAgent = require('superagent')
 
 // 静态资源控制器
 class ExplorerController extends Controller {
@@ -35,6 +36,8 @@ class ExplorerController extends Controller {
     let today = moment().format('YYYY-MM-DD')
     let { local, date = today } = params
 
+    console.log(date)
+
     let data = await ctx.service.explorer.schedules.getPreByLocalDate(
       local,
       date
@@ -54,7 +57,7 @@ class ExplorerController extends Controller {
     let { local, date = today } = params
 
     data = await ctx.service.explorer.schedules.getByLocalDate(local, date)
-    // 更新至新表
+    // 从原始时间表查找并更新至新表
     if (data.length === 0) {
       data = await ctx.service.explorer.schedules.getPreByLocalDate(local, date)
 
@@ -73,18 +76,62 @@ class ExplorerController extends Controller {
             let schedules = schedule.schedules
             if (schedules) {
               schedules = schedules.filter(_ => _.date === date)
-              let _data = {
-                id,
-                schedules
+              schedules = schedules.map(_ => _.startTime)
+              if (schedules.length > 0) {
+                let _data = {
+                  id,
+                  schedules
+                }
+                data.push(_data)
+                await ctx.service.explorer.schedules.updateByLocalDateId(
+                  local,
+                  date,
+                  id,
+                  _data
+                )
               }
-              data.push(_data)
-              await ctx.service.explorer.schedules.updateByLocalDateId(
-                local,
-                date,
-                id,
-                _data
-              )
             }
+          }
+        }
+      }
+    }
+
+    // 从旧数据库查找并更新至新表
+    if (data.length === 0) {
+      let _date = moment(date, 'YYYY-MM-DD')
+        .subtract(1, 'days')
+        .format('YYYY-MM-DD')
+      data = await superAgent.get(
+        `http://weather.17disney.com/tp/api/schedules/${_date}`
+      )
+      let schedules = data.body.data
+      data = []
+
+      for (const item of schedules) {
+        let { name, type, time_list } = item
+        if (type === 4) {
+          let ids = {
+            __id__: name,
+            entityType: 'Entertainment',
+            destination: 'shdr'
+          }
+          let id = objectToLine(ids)
+          let timeList = time_list.filter(_ => _.date === date)
+          schedules = timeList.map(_ => _.start_time)
+
+          if (schedules.length > 0) {
+            let _data = {
+              id,
+              schedules
+            }
+            data.push(_data)
+
+            await ctx.service.explorer.schedules.updateByLocalDateId(
+              local,
+              date,
+              id,
+              _data
+            )
           }
         }
       }
