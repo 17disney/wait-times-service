@@ -18,10 +18,9 @@ module.exports = app => {
     waitMath: {type:Array},
     waitFtList: {type: Array},
 
-    fpList: { type: Array },
-    utime: { type: Number }
+    fpList: { type: Array }
   })
-  DsAttractionSchema.index({ waitAvg: -1, id: 1, local: 1 })
+  // DsAttractionSchema.index({ waitAvg: -1, id: 1, local: 1 })
 
   return mongoose.model('DsAttraction', DsAttractionSchema, 'ds_attractions')
 }

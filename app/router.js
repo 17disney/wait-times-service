@@ -5,17 +5,16 @@ module.exports = app => {
   const { router, controller } = app
   router.get('/', controller.home.index)
 
-  router.get('/explorer-service/schedules/:local/:date', controller.explorer.schedules)
-  router.get('/explorer-service/destinations/:local', controller.explorer.destinations)
-
+  router.get('/explorer/schedules/:local/:date', controller.explorer.schedules)
   router.get('/explorer/schedules/:local/:date', controller.explorer.schedules)
   router.get('/explorer/schedules-pre/:local', controller.explorer.schedulesPre)
   router.get('/explorer/schedules-list/:id', controller.explorer.schedulesList)
+  router.get('/explorer/destinations/:local', controller.explorer.destinations)
 
   // router.get('/explorer/schedules-update/:local', controller.explorer.updateAll)
   router.get('/explorer/destinations-raw/:local', controller.explorer.destinationsRaw)
-
   router.get('/explorer/destinations/:local', controller.explorer.destinations)
+  router.put('/explorer/destinations/:id', controller.explorer.updateDestinationsId)
   router.put('/explorer/destinations/:id', controller.explorer.updateDestinationsId)
   // router.post('/explorer/destinations/:local/:id', controller.explorer.destinationList)
 

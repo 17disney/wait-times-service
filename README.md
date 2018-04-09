@@ -1,14 +1,11 @@
-# Disney-Api
-
-Disney Api服务
-
+# 17Disney Wait Times Service
 
 ```shell
-docker stop disney-api \
-&& docker rm disney-api \
-&& cd /data/jenkins/workspace/disney-api \
-&& docker build -t disney-api . \
-&& docker run -d -p 27101:80 --name disney-api \
---mount type=bind,source=/data/config/disney-api,target=/app/config \
-disney-api npm run docker
+docker stop 17disney-wait-times-service \
+&& docker rm 17disney-wait-times-service \
+&& cd /data/jenkins/workspace/17disney-wait-times-service \
+&& docker build -t 17disney-wait-times-service . \
+&& docker run -d -p 27104:80 --name 17disney-wait-times-service \
+--mount type=bind,source=/data/config/17disney-wait-times-service,target=/app/config \
+17disney-wait-times-service npm run docker
 ```

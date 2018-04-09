@@ -13,4 +13,6 @@ module.exports = app => {
   DsSchedulesSchema.index({ id: 1 })
   DsSchedulesSchema.index({ local: 1, date: 1 })
   return mongoose.model('DsSchedules', DsSchedulesSchema, 'ds_schedules')
+
+  // return mongoose.model('DsSchedules')
 }
