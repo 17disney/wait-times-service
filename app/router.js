@@ -13,11 +13,11 @@ module.exports = app => {
   router.put('/destinations/park/:local', controller.explorer.updateDestinationsId)
   router.get('/destinations/raw/:local', controller.explorer.destinationsRaw)
 
-  router.get('/wait-times/home/:local/:date', controller.waitTimes.home)
+  router.get('/wait-times/home/:local/:date', controller.waitTimes.attractions)
   // router.get('/wait-times/home/:local', controller.waitCount.home)
 
   router.get('/wait-times/park/:local', controller.waitCount.park)
-  router.get('/wait-times/park/:local/:date', controller.waitTimes.attractions)
+  router.get('/wait-times/park/:local/:date', controller.waitTimes.home)
 
   router.get('/wait-times/attractions/:local/:id/:date', controller.waitTimes.attractionsId)
   router.get('/wait-times/attractions/:local/:id', controller.waitCount.attractionsId)
