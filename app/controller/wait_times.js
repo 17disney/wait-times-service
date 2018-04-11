@@ -15,7 +15,7 @@ class WaitTimesController extends Controller {
   }
 
   // 获取乐园
-  async park() {
+  async home() {
     const { ctx, service } = this
     ctx.validate(this.baseRule, ctx.params)
 
