@@ -56,7 +56,7 @@ class ParkService extends Service {
       _id: 0,
       markList: 0,
       flowList: 0
-    }).sort({ date: -1 })
+    }).sort({ date: 1 })
     return data
   }
 }

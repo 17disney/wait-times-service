@@ -1,6 +1,6 @@
 const Controller = require('egg').Controller
 const moment = require('moment')
-const { lineToObject, objectToLine } = require('../util/api_tool')
+const { lineToObject, objectToLine } = require('../utils/api_tool')
 const superAgent = require('superagent')
 
 // 静态资源控制器

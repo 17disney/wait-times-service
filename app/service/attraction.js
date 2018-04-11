@@ -78,7 +78,7 @@ class AttractionService extends Service {
       fpList: 0,
       schedule: 0,
       waitMaxList: 0
-    }).sort({ date: -1 })
+    }).sort({ date: 1 })
     return data
   }
 
