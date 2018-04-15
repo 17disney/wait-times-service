@@ -83,6 +83,8 @@ class WaitCountController extends Controller {
         markAvg,
         markMax,
         flowHour,
+        flowMax,
+        flowAvg,
         markHour
       } = item
 
@@ -95,6 +97,8 @@ class WaitCountController extends Controller {
         markAvg,
         markMax,
         flowHour,
+        flowMax,
+        flowAvg,
         markHour
       })
     })
