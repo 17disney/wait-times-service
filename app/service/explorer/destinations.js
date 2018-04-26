@@ -8,8 +8,8 @@ class DestinationsService extends Service {
     let data = await this.ctx.model.ScanDestination.findOne(find, {
       _id: 0,
       local: 0,
-      date: 0
-    })
+      // date: 0
+    }).sort({ date: -1 })
 
     return data
   }
