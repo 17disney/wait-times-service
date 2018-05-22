@@ -14,9 +14,23 @@ class DestinationsService extends Service {
     return data
   }
 
-  async getDestinations(local, type) {
+  async getDestinations(local) {
     let find = {
       local
+    }
+    let data = await this.ctx.model.DsDestination.find(find, {
+      _id: 0,
+      local: 0,
+      date: 0
+    })
+
+    return data
+  }
+
+  async getDestinationsType(local, type) {
+    let find = {
+      local,
+      type
     }
     let data = await this.ctx.model.DsDestination.find(find, {
       _id: 0,
