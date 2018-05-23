@@ -10,12 +10,12 @@ class CalendarController extends Controller {
     const { local } = ctx.params
 
     let date = moment().format('YYYY-MM-DD')
-    let data
-    data = await ctx.service.calendar.getLocalDate(local, date)
-    data = data['data']
+    let data  = await ctx.service.calendar.getLocalDate(local, date)
 
     if (!data) {
       data = await ctx.service.calendar.cache(local, date)
+    } else {
+      data = data['data']
     }
 
     if (!data) {
