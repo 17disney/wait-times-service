@@ -7,7 +7,6 @@ class TicketCountController extends Controller {
     // let { st, et } = ctx.query
     ctx.body = await service.ticket.getByLocalRang(local, st, et)
   }
-
 }
 
 module.exports = TicketCountController

@@ -30,6 +30,7 @@ class ParkService extends Service {
     return ret
   }
 
+  // 获取当天
   async getByLocalToday(local) {
     let find = {
       local

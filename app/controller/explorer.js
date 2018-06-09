@@ -15,9 +15,16 @@ class ExplorerController extends Controller {
 
   async destinations() {
     const { ctx } = this
-    let { local } = ctx.params
+    const { local } = ctx.params
 
-    ctx.body = await ctx.service.explorer.destinations.getDestinations(local)
+    const { type } = ctx.query
+
+    if (type) {
+      ctx.body = await ctx.service.explorer.destinations.getDestinationsType(local, type)
+    } else {
+      ctx.body = await ctx.service.explorer.destinations.getDestinations(local)
+    }
+
   }
 
   async updateDestinationsId() {

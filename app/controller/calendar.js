@@ -3,7 +3,6 @@
 const Controller = require('egg').Controller
 const moment = require('moment')
 
-
 class CalendarController extends Controller {
   async list() {
     const { ctx, app } = this

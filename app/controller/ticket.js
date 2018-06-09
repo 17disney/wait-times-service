@@ -7,6 +7,7 @@ class TicketController extends Controller {
     let { st, et } = ctx.query
     ctx.body = await service.ticket.getByLocalRang(local, st, et)
   }
+
   async availableDate() {
     const { ctx, service } = this
     let { local = 'shanghai', date } = ctx.params
