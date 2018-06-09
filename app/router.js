@@ -10,7 +10,7 @@ module.exports = app => {
   router.get('/schedules/attractions/:id', controller.explorer.schedulesList)
 
   router.get('/destinations/park/:local', controller.explorer.destinations)
-  router.put('/destinations/park/:local/:id', controller.explorer.updateDestinationsId)
+  // router.put('/destinations/park/:local/:id', controller.explorer.updateDestinationsId)
   router.get('/destinations/raw/:local', controller.explorer.destinationsRaw)
 
   router.get('/calendars/:local', controller.calendar.list)
