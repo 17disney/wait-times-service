@@ -23,14 +23,18 @@ class CalendarService extends Service {
     }
 
     const LIST = [
-      'entGoldenFairytaleFanfare', // 金色童话盛典
-      'entFrozenSingAlongCelebration', // 冰雪奇缘：欢唱盛会
+      'entIgniteDreamNighttimeSpectacular', // 点亮奇梦：夜光幻影秀
+      'entMickeysStorybookExpress', // 米奇童话专列
+      'entDuffysSplashingPreParade', // 达菲缤纷夏日巡游
+      'entSummerBlastCastleShow', // 夏日狂欢节城堡秀
       'entEyeOfStormCaptainJacksSpectacular', // 风暴来临:杰克船长之惊天特技大冒险
+      'entFrozenSingAlongCelebration', // 冰雪奇缘：欢唱盛会
       'entTarzanCallOfJungle', // 人猿泰山：丛林的呼唤
+      // 'entGoldenFairytaleFanfare', // 金色童话盛典
+      'entFarmerAlsSplashAround', // 艾尔农庄夏日玩水派对
       'entBaymaxSuperExerciseExpo', // 大白超酷活力秀
       'entClubDestinE', // 明日世界E空间聚乐部
-      'entMickeysStorybookExpress', // 米奇童话专列
-      'entIgniteDreamNighttimeSpectacular' // 点亮奇梦：夜光幻影秀
+      'entBeautyAndTheBeast', // 《美女与野兽》
     ]
 
     const destinationsList = await ctx.service.explorer.destinations.getDestinationsType(
