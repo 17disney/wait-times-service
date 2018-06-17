@@ -6,12 +6,15 @@ const { lineToObject } = require('../utils/api_tool')
 class CalendarService extends Service {
   async getLocalDate(local, date) {
     const { ctx } = this
-    const data = await ctx.model.DsCalendar.findOne({
-      local,
-      date
-    }, {
-      _id: 0
-    })
+    const data = await ctx.model.DsCalendar.findOne(
+      {
+        local,
+        date
+      },
+      {
+        _id: 0
+      }
+    )
     return data
   }
 
@@ -33,8 +36,8 @@ class CalendarService extends Service {
       // 'entGoldenFairytaleFanfare', // 金色童话盛典
       'entFarmerAlsSplashAround', // 艾尔农庄夏日玩水派对
       'entBaymaxSuperExerciseExpo', // 大白超酷活力秀
-      'entClubDestinE', // 明日世界E空间聚乐部
-      'entBeautyAndTheBeast', // 《美女与野兽》
+      'entClubDestinE' // 明日世界E空间聚乐部
+      // 'entBeautyAndTheBeast', // 《美女与野兽》
     ]
 
     const destinationsList = await ctx.service.explorer.destinations.getDestinationsType(
