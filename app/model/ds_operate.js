@@ -6,6 +6,6 @@ module.exports = app => {
     markMaxAvg: { type: Number }
   })
 
-  DsOperateSchema.index({ date: -1, local: 1 })
-  return mongoose.model('DsOperate', DsOperateSchema, 'ds_operate')
+  DsOperateSchema.index({ local: 1 })
+  return mongoose.model('DsOperate', DsOperateSchema, 'ds_operates')
 }

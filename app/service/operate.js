@@ -1,12 +1,18 @@
-'use strict';
+'use strict'
 
-const Service = require('egg').Service;
+const Service = require('egg').Service
 
 class OperateService extends Service {
   async getByLocal(local) {
-    const data = await this.ctx.model.Ds
+    const { ctx } = this
+    const data = await ctx.model.DsOperate.findOne(
+      { local },
+      {
+        _id: 0
+      }
+    )
     return data
   }
 }
 
-module.exports = OperateService;
+module.exports = OperateService
