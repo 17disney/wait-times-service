@@ -36,7 +36,7 @@ class ExplorerController extends Controller {
     ctx.body = data
   }
 
-  // 时间表
+  // 未来时间表
   async schedulesPre() {
     const { ctx } = this
     let today = moment().format('YYYY-MM-DD')
@@ -75,7 +75,7 @@ class ExplorerController extends Controller {
     ctx.body = 'ok'
   }
 
-
+  // 乐园开放时间
   async schedules() {
     const { ctx } = this
     var data
@@ -100,6 +100,7 @@ class ExplorerController extends Controller {
           if (schedule && schedule.schedules) {
             let schedules = schedule.schedules
             if (schedules) {
+              // 取当天
               schedules = schedules.filter(_ => _.date === date)
               schedules = schedules.map(_ => _.startTime)
               if (schedules.length > 0) {
