@@ -25,6 +25,12 @@ module.exports = app => {
     temMin: { type: String },
     aqi: { type: String },
 
+    allFlowDay: { type: Number },
+    rankFlowDay: { type: Number },
+
+    allMarkDay: { type: Number },
+    rankMarkDay: { type: Number },
+
     utime: { type: Number }
   })
 

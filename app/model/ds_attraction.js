@@ -18,7 +18,10 @@ module.exports = app => {
     waitMath: {type:Array},
     waitFtList: {type: Array},
 
-    fpList: { type: Array }
+    fpList: { type: Array },
+
+    rankWait: { type: Number },
+    fpFinish: { type: Number }
   })
   // DsAttractionSchema.index({ waitAvg: -1, id: 1, local: 1 })
 
