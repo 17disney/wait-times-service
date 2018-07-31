@@ -6,3 +6,4 @@ WORKDIR /app
 RUN yarn install
 
 EXPOSE 80
+CMD ["npm", "run", "docker"]
