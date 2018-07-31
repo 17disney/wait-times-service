@@ -24,7 +24,8 @@ module.exports = app => {
   router.get('/wait-times/attractions/:local/:id/:date', controller.waitTimes.attractionsId)
   router.get('/wait-times/attractions/:local/:id', controller.waitCount.attractionsId)
 
-  router.get('/operate/count/:local', controller.operate.count)
+  router.get('/operate/park/:local', controller.operate.list)
+  router.get('/operate/park/:local/day', controller.operate.day)
 
   router.get('/ticket/available/:local', controller.ticket.available)
   router.get('/ticket/available/:local/:date', controller.ticket.availableDate)
