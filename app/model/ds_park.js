@@ -31,6 +31,12 @@ module.exports = app => {
     allMarkDay: { type: Number },
     rankMarkDay: { type: Number },
 
+    show: {type: Number},
+    allFlowDay: {type: Number},
+    allMarkDay: {type: Number},
+    rankFlowDay: {type: Number},
+    rankMarkDay: {type: Number},
+
     utime: { type: Number }
   })
 
