@@ -30,7 +30,7 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --port=27101 --daemon --title=wait-times-service",
+    "start": "egg-scripts start --port=80 --title=wait-times-service",
     "docker": "egg-scripts start --port=80 --title=wait-times-service",
     "stop": "egg-scripts stop",
     "dev": "egg-bin dev",

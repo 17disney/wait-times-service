@@ -85,7 +85,12 @@ class WaitCountController extends Controller {
         flowHour,
         flowMax,
         flowAvg,
-        markHour
+        markHour,
+        show,
+        allFlowDay,
+        allMarkDay,
+        rankFlowDay,
+        rankMarkDay
       } = item
 
       list.push({
@@ -99,7 +104,12 @@ class WaitCountController extends Controller {
         flowHour,
         flowMax,
         flowAvg,
-        markHour
+        markHour,
+        show,
+        allFlowDay,
+        allMarkDay,
+        rankFlowDay,
+        rankMarkDay
       })
     })
 

@@ -1,7 +1,7 @@
 const Controller = require('egg').Controller
 
 class OperateController extends Controller {
-  async count() {
+  async park() {
     const { ctx, service } = this
     const { local } = ctx.params
 
