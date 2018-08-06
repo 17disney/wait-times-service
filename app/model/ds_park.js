@@ -32,6 +32,7 @@ module.exports = app => {
     rankMarkDay: { type: Number },
 
     show: {type: Number},
+    openAtt: {type: Number},
     allFlowDay: {type: Number},
     allMarkDay: {type: Number},
     rankFlowDay: {type: Number},
