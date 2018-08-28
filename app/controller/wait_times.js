@@ -13,7 +13,6 @@ class WaitTimesController extends Controller {
       local: { type: 'enum', values: localList, required: true }
     }
   }
-
   // 获取乐园
   async home() {
     const { ctx, service } = this
@@ -27,7 +26,6 @@ class WaitTimesController extends Controller {
       ctx.body = await service.park.getByLocalDate(local, date)
     }
   }
-
   // 获取所有项目
   async attractions() {
     const { ctx, service } = this
@@ -46,7 +44,6 @@ class WaitTimesController extends Controller {
       }
     }
   }
-
   // 获取项目详情
   async attractionsId() {
     const { ctx, service } = this

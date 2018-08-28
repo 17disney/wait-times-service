@@ -24,7 +24,6 @@ class ExplorerController extends Controller {
     } else {
       ctx.body = await ctx.service.explorer.destinations.getDestinations(local)
     }
-
   }
 
   async updateDestinationsId() {
@@ -35,7 +34,6 @@ class ExplorerController extends Controller {
     await ctx.service.explorer.destinations.updateDestinationsId(id, data)
     ctx.body = data
   }
-
   // 未来时间表
   async schedulesPre() {
     const { ctx } = this
@@ -51,7 +49,6 @@ class ExplorerController extends Controller {
       throw new Error('时间表未更新')
     }
   }
-
   // 项目时间表
   async schedulesList() {
     const { ctx } = this
@@ -74,7 +71,6 @@ class ExplorerController extends Controller {
     }
     ctx.body = 'ok'
   }
-
   // 乐园开放时间
   async schedules() {
     const { ctx } = this
@@ -121,7 +117,6 @@ class ExplorerController extends Controller {
         }
       }
     }
-
     // 从旧数据库查找并更新至新表
     if (data.length === 0) {
       let _date = moment(date, 'YYYY-MM-DD')
