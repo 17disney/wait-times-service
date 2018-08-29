@@ -63,3 +63,31 @@ exports.arrayAvg = arr => {
   }
   return avg
 }
+
+exports.compare = (property) => {
+  return function(a, b) {
+    var value1 = a[property]
+    var value2 = b[property]
+    return value1 - value2
+  }
+}
+
+function deepClone(source) {
+  if (!source && typeof source !== 'object') {
+    throw new Error('error arguments', 'shallowClone')
+  }
+  const targetObj = source.constructor === Array ? [] : {}
+  for (const keys in source) {
+    if (source.hasOwnProperty(keys)) {
+      if (source[keys] && typeof source[keys] === 'object') {
+        targetObj[keys] = source[keys].constructor === Array ? [] : {}
+        targetObj[keys] = deepClone(source[keys])
+      } else {
+        targetObj[keys] = source[keys]
+      }
+    }
+  }
+  return targetObj
+}
+
+exports.deepClone = deepClone
