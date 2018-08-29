@@ -47,6 +47,8 @@ class WaitController extends Controller {
         })
       }
 
+      att.waitView = `${att.wait} 分`
+
       list.push(att)
     })
 
