@@ -2,10 +2,10 @@
 
 const moment = require('moment')
 const Controller = require('egg').Controller
-const { compare } = require('../utils/util')
-const { listOpen } = require('../utils/array')
+const { compare } = require('../../utils/util')
+const { listOpen } = require('../../utils/array')
 
-class DatavController extends Controller {
+class ShowController extends Controller {
   async parkShows() {
     const { ctx } = this
     const { local } = ctx.params
@@ -65,4 +65,4 @@ class DatavController extends Controller {
   }
 }
 
-module.exports = DatavController
+module.exports = ShowController
