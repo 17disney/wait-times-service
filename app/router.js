@@ -28,6 +28,7 @@ module.exports = app => {
   // router.get('/operate/park/:local/day', controller.operate.day)
 
   router.get('/datav/park/:local/shows', controller.datav.show.parkShows)
+  router.get('/datav/park/:local/waits/live', controller.datav.wait.live)
 
   router.get('/ticket/available/:local', controller.ticket.available)
   router.get('/ticket/available/:local/:date', controller.ticket.availableDate)
