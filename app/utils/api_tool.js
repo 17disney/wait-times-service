@@ -3,7 +3,6 @@ const moment = require('moment')
 function getAncestorsName(item, type, data) {
   const descId = item.find(_ => _.type === type).id
   const itemData = data.find(_ => _.id === descId)
-  // console.log(itemData)
   return itemData
 }
 

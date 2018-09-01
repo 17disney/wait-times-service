@@ -69,7 +69,6 @@ class ExplorerController extends Controller {
       await superAgent.get(
         `http://127.0.0.1:7001/explorer/schedules/shanghai/${date}`
       )
-      console.log(date)
       date = moment(date, 'YYYY-MM-DD')
         .add(1, 'days')
         .format('YYYY-MM-DD')

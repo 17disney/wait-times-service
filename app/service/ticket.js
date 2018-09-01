@@ -2,7 +2,6 @@ const Service = require('egg').Service
 
 class TicketService extends Service {
   async getByLocalRang(local, st, et) {
-    console.log
     let find = {
       local,
       date: {
@@ -18,7 +17,6 @@ class TicketService extends Service {
   }
 
   async getByLocalDate(local, date) {
-    console.log
     let find = {
       local,
       date

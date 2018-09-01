@@ -16,7 +16,6 @@ class ShowController extends Controller {
       local,
       date
     )
-    console.log(dataShow)
     const dataDesc = await ctx.service.explorer.destinations.getDestinationsType(
       local,
       'entertainment'
