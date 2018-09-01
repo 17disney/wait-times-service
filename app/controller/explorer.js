@@ -20,7 +20,10 @@ class ExplorerController extends Controller {
     const { type } = ctx.query
 
     if (type) {
-      ctx.body = await ctx.service.explorer.destinations.getDestinationsType(local, type)
+      ctx.body = await ctx.service.explorer.destinations.getDestinationsType(
+        local,
+        type
+      )
     } else {
       ctx.body = await ctx.service.explorer.destinations.getDestinations(local)
     }
@@ -62,103 +65,22 @@ class ExplorerController extends Controller {
     const { ctx } = this
     let date = '2017-04-17'
     let today = '2018-03-30'
-    while(date !== today) {
+    while (date !== today) {
       await superAgent.get(
         `http://127.0.0.1:7001/explorer/schedules/shanghai/${date}`
       )
       console.log(date)
-      date = moment(date, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD')
+      date = moment(date, 'YYYY-MM-DD')
+        .add(1, 'days')
+        .format('YYYY-MM-DD')
     }
     ctx.body = 'ok'
   }
   // 乐园开放时间
   async schedules() {
     const { ctx } = this
-    var data
-    let { local, date } = ctx.params
-
-    data = await ctx.service.explorer.schedules.getByLocalDate(local, date)
-    // 从原始时间表查找并更新至新表
-    if (data.length === 0) {
-      data = await ctx.service.explorer.schedules.getPreByLocalDate(local, date)
-
-      let activities = []
-      for (const item of data) {
-        activities = activities.concat(item.body[0]['activities'])
-      }
-
-      data = []
-
-      for (const item of activities) {
-        let { id, schedule } = item
-        let type = lineToObject(id)['entityType']
-        if (type === 'Entertainment') {
-          if (schedule && schedule.schedules) {
-            let schedules = schedule.schedules
-            if (schedules) {
-              // 取当天
-              schedules = schedules.filter(_ => _.date === date)
-              schedules = schedules.map(_ => _.startTime)
-              if (schedules.length > 0) {
-                let _data = {
-                  id,
-                  schedules
-                }
-                data.push(_data)
-                await ctx.service.explorer.schedules.updateByLocalDateId(
-                  local,
-                  date,
-                  id,
-                  _data
-                )
-              }
-            }
-          }
-        }
-      }
-    }
-    // 从旧数据库查找并更新至新表
-    if (data.length === 0) {
-      let _date = moment(date, 'YYYY-MM-DD')
-        .subtract(1, 'days')
-        .format('YYYY-MM-DD')
-      data = await superAgent.get(
-        `http://weather.17disney.com/tp/api/schedules/${_date}`
-      )
-      let schedules = data.body.data
-      data = []
-
-      for (const item of schedules) {
-        let { name, type, time_list } = item
-        if (type === 4) {
-          let ids = {
-            __id__: name,
-            entityType: 'Entertainment',
-            destination: 'shdr'
-          }
-          let id = objectToLine(ids)
-          let timeList = time_list.filter(_ => _.date === date)
-          schedules = timeList.map(_ => _.start_time)
-
-          if (schedules.length > 0) {
-            let _data = {
-              id,
-              schedules
-            }
-            data.push(_data)
-
-            await ctx.service.explorer.schedules.updateByLocalDateId(
-              local,
-              date,
-              id,
-              _data
-            )
-          }
-        }
-      }
-    }
-
-    ctx.body = data
+    const { local, date } = ctx.params
+    ctx.body = await ctx.service.explorer.schedules.getSchedules(local, date)
   }
 }
 

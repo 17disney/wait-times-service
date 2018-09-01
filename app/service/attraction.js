@@ -31,14 +31,14 @@ class AttractionService extends Service {
   }
 
   // 获取最新
-  async getByLocalToday(local, date) {
+  async getByLocalToday(local, date, slice = -1) {
     let find = {
       local,
       date
     }
     let data = await this.ctx.model.DsAttraction.find(find, {
       _id: 0,
-      waitList: { $slice: -1 },
+      waitList: { $slice: slice },
       waitMaxList: 0,
       fpList: { $slice: -1 },
       schedule: 0

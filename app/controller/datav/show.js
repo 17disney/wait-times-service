@@ -12,11 +12,11 @@ class ShowController extends Controller {
     const today = moment().format('YYYY-MM-DD')
     const { date = today } = ctx.query
     const nowX = moment().format('x')
-
-    const dataShow = await ctx.service.explorer.schedules.getByLocalDate(
+    const dataShow = await ctx.service.explorer.schedules.getSchedules(
       local,
       date
     )
+    console.log(dataShow)
     const dataDesc = await ctx.service.explorer.destinations.getDestinationsType(
       local,
       'entertainment'

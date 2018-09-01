@@ -34,7 +34,8 @@ class WaitController extends Controller {
 
     const listWaits = await ctx.service.attraction.getByLocalToday(
       local,
-      this.today
+      this.today,
+      100
     )
 
     const list = []
@@ -61,6 +62,7 @@ class WaitController extends Controller {
         landName,
         startTime,
         endTime,
+        waitList,
         wait: 0
       }
 
@@ -78,7 +80,6 @@ class WaitController extends Controller {
     })
 
     ctx.body = list
-    // dataDescLand
   }
 }
 
