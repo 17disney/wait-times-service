@@ -23,8 +23,20 @@ class ParkController extends Controller {
     const { slice = 50 } = ctx.query
 
     const data = await ctx.service.park.getByLocalDate(local, this.today, slice)
+    const list = data[id]
 
-    ctx.body = data[id]
+    const nList = []
+    list.forEach(item => {
+      const [utime, num] = item
+
+      item = {
+        utime,
+        num
+      }
+      nList.push(item)
+    })
+
+    ctx.body = nList
   }
 }
 
