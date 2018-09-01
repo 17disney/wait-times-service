@@ -19,10 +19,11 @@ class ParkController extends Controller {
 
   async liveId() {
     const { ctx } = this
-    const { local } = ctx.params
-    const { slice = 1, id } = ctx.query
+    const { local, id } = ctx.params
+    const { slice = 50 } = ctx.query
 
     const data = await ctx.service.park.getByLocalDate(local, this.today, slice)
+
     ctx.body = data[id]
   }
 }

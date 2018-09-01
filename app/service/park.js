@@ -7,7 +7,7 @@ class ParkService extends Service {
       local,
       date
     }
-    console.log(slice)
+
     let data = await this.ctx.model.DsPark.findOne(find, {
       _id: 0,
       markList: { $slice: -slice },
