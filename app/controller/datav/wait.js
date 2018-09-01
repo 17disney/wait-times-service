@@ -13,7 +13,7 @@ class WaitController extends Controller {
   async live() {
     const { ctx } = this
     const { local } = ctx.params
-    const { hotLevel: HotLevel = 0} = ctx.query
+    const { hotLevel: HotLevel = 0, slice = 1} = ctx.query
 
     const dataDesc = await ctx.service.explorer.destinations.getDestinationsType(
       local,
@@ -35,7 +35,7 @@ class WaitController extends Controller {
     const listWaits = await ctx.service.attraction.getByLocalToday(
       local,
       this.today,
-      100
+      -slice
     )
 
     const list = []
@@ -66,8 +66,8 @@ class WaitController extends Controller {
         wait: 0
       }
 
-      if (waitList && waitList[0]) {
-        const [utime, wait, status] = waitList[0]
+      if (waitList && waitList.length > 0) {
+        const [utime, wait, status] = waitList[waitList.length - 1]
         Object.assign(att, {
           utime,
           wait,

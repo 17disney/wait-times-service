@@ -1,15 +1,17 @@
 const Service = require('egg').Service
 const moment = require('moment')
 
-
 class ParkService extends Service {
-  async getByLocalDate(local, date) {
+  async getByLocalDate(local, date, slice = 100000) {
     let find = {
       local,
       date
     }
+    console.log(slice)
     let data = await this.ctx.model.DsPark.findOne(find, {
       _id: 0,
+      markList: { $slice: -slice },
+      flowList: { $slice: -slice }
       // markList: 0,
       // flowList: 0
     })
@@ -17,7 +19,6 @@ class ParkService extends Service {
   }
 
   async updateByLocalDate(find, data) {
-
     let ret = await this.ctx.model.DsPark.update(
       find,
       {
@@ -36,7 +37,7 @@ class ParkService extends Service {
       local
     }
     let data = await this.ctx.model.DsPark.findOne(find, {
-      _id: 0,
+      _id: 0
       // markList: { $slice: -1 },
       // flowList: { $slice: -1 }
     }).sort({
