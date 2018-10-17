@@ -8,7 +8,7 @@ class CalendarController extends Controller {
     const { ctx, app } = this
     const { local } = ctx.params
 
-    let date = moment().format('YYYY-MM-DD')
+    const date = moment().format('YYYY-MM-DD')
     let data  = await ctx.service.calendar.getLocalDate(local, date)
 
     if (!data) {

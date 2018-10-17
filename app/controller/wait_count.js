@@ -17,7 +17,7 @@ class WaitCountController extends Controller {
       local: { type: 'enum', values: ['shanghai'], required: true }
     }
   }
-
+  // 项目等候时间范围查询
   async attractionsId() {
     const { ctx, service } = this
     let { local, id } = ctx.params
@@ -59,7 +59,7 @@ class WaitCountController extends Controller {
 
     ctx.body = list
   }
-
+  // 乐园等候时间范围查询
   async park() {
     const { ctx, service } = this
     const { local } = ctx.params

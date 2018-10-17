@@ -3,7 +3,7 @@ const moment = require('moment')
 const { lineToObject, objectToLine } = require('../utils/api_tool')
 const superAgent = require('superagent')
 
-// 静态资源控制器
+// 静态资源控制
 class ExplorerController extends Controller {
   // 字典
   async destinationsRaw() {
@@ -12,7 +12,7 @@ class ExplorerController extends Controller {
 
     ctx.body = await ctx.service.explorer.destinations.getDestinationsRaw(local)
   }
-
+  // 简介列表
   async destinations() {
     const { ctx } = this
     const { local } = ctx.params
@@ -37,7 +37,7 @@ class ExplorerController extends Controller {
     await ctx.service.explorer.destinations.updateDestinationsId(id, data)
     ctx.body = data
   }
-  // 未来时间表
+  // 预报
   async schedulesPre() {
     const { ctx } = this
     let today = moment().format('YYYY-MM-DD')
@@ -60,7 +60,7 @@ class ExplorerController extends Controller {
     let data = await ctx.service.explorer.schedules.getByRangId(id, st, et)
     ctx.body = data
   }
-
+  // 更新脚本
   async updateAll() {
     const { ctx } = this
     let date = '2017-04-17'
