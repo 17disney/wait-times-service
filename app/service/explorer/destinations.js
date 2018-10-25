@@ -1,76 +1,64 @@
-const Service = require('egg').Service
+'use strict';
+
+const Service = require('egg').Service;
 
 class DestinationsService extends Service {
   async getDestinationsRaw(local) {
-    let find = {
-      local
-    }
-    let data = await this.ctx.model.ScanDestination.findOne(find, {
+    const find = {
+      local,
+    };
+    const data = await this.ctx.model.ScanDestination.findOne(find, {
       _id: 0,
       local: 0,
       // date: 0
-    }).sort({ date: -1 })
+    }).sort({ date: -1 });
 
-    return data
+    return data;
   }
 
   async getDestinations(local) {
-    let find = {
-      local
-    }
-    let data = await this.ctx.model.DsDestination.find(find, {
+    const find = {
+      local,
+    };
+    const data = await this.ctx.model.DsDestination.find(find, {
       _id: 0,
       local: 0,
-      date: 0
-    })
+      date: 0,
+    });
 
-    return data
+    return data;
   }
 
   async getDestinationsType(local, type) {
-    let find = {
+    const find = {
       local,
-      type
-    }
-    let data = await this.ctx.model.DsDestination.find(find, {
+      type,
+    };
+    const data = await this.ctx.model.DsDestination.find(find, {
       _id: 0,
       local: 0,
-      date: 0
-    })
+      date: 0,
+    });
 
-    return data
-  }
-
-  async getDestinationsType(local, type) {
-    let find = {
-      local,
-      type
-    }
-    let data = await this.ctx.model.DsDestination.find(find, {
-      _id: 0,
-      local: 0,
-      date: 0
-    })
-
-    return data
+    return data;
   }
 
   async updateDestinationsId(id, data) {
-    let find = {
-      id
-    }
-    let ret = await this.ctx.model.DsDestination.update(
+    const find = {
+      id,
+    };
+    const ret = await this.ctx.model.DsDestination.update(
       find,
       {
-        $set: data
+        $set: data,
       },
       {
-        upsert: true
+        upsert: true,
       }
-    )
+    );
 
-    return ret
+    return ret;
   }
 }
 
-module.exports = DestinationsService
+module.exports = DestinationsService;

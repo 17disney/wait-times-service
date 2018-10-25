@@ -1,29 +1,29 @@
-'use strict'
+'use strict';
 
-const Service = require('egg').Service
-const { lineToObject } = require('../utils/api_tool')
+const Service = require('egg').Service;
+const { lineToObject } = require('../utils/api_tool');
 
 class CalendarService extends Service {
   async getLocalDate(local, date) {
-    const { ctx } = this
+    const { ctx } = this;
     const data = await ctx.model.DsCalendar.findOne(
       {
         local,
-        date
+        date,
       },
       {
-        _id: 0
+        _id: 0,
       }
-    )
-    return data
+    );
+    return data;
   }
 
   async cache(local, date) {
-    const { ctx } = this
+    const { ctx } = this;
     const find = {
       local,
-      date
-    }
+      date,
+    };
 
     const LIST = [
       'entIgniteDreamNighttimeSpectacular', // 点亮奇梦：夜光幻影秀
@@ -36,78 +36,78 @@ class CalendarService extends Service {
       // 'entGoldenFairytaleFanfare', // 金色童话盛典
       'entFarmerAlsSplashAround', // 艾尔农庄夏日玩水派对
       'entBaymaxSuperExerciseExpo', // 大白超酷活力秀
-      'entClubDestinE' // 明日世界E空间聚乐部
+      'entClubDestinE', // 明日世界E空间聚乐部
       // 'entBeautyAndTheBeast', // 《美女与野兽》
-    ]
+    ];
 
     const destinationsList = await ctx.service.explorer.destinations.getDestinationsType(
       local,
       'entertainment'
-    )
+    );
 
-    const destinations = {}
+    const destinations = {};
     destinationsList.forEach(item => {
-      const aid = lineToObject(item.id)['__id__']
-      destinations[aid] = item
-    })
+      const aid = lineToObject(item.id).__id__;
+      destinations[aid] = item;
+    });
 
-    let schedulesList = await ctx.service.explorer.schedules.getPreByLocalDate(
+    const schedulesList = await ctx.service.explorer.schedules.getPreByLocalDate(
       local,
       date
-    )
+    );
 
-    let schedules
+    let schedules;
     if (schedulesList.length === 2) {
-      schedules = this._schedulesFilter(schedulesList)
+      schedules = this._schedulesFilter(schedulesList);
     } else {
-      return false
+      return false;
     }
 
-    const nList = []
+    const nList = [];
     LIST.forEach(id => {
-      let destination = destinations[id]
-      let schedule = schedules[id]
+      const destination = destinations[id];
+      const schedule = schedules[id];
 
       nList.push({
         destination,
-        schedule
-      })
-    })
+        schedule,
+      });
+    });
 
     const update = {
       local,
       date,
-      data: nList
-    }
+      data: nList,
+    };
 
     await ctx.model.DsCalendar.update(
       find,
       {
-        $set: update
+        $set: update,
       },
       {
-        upsert: true
+        upsert: true,
       }
-    )
+    );
 
-    return nList
+    return nList;
   }
 
   _schedulesFilter(data) {
-    let activities = []
+    let activities = [];
     for (const item of data) {
-      activities = activities.concat(item.body[0].activities)
+      activities = activities.concat(item.body[0].activities);
     }
 
-    const nData = {}
+    const nData = {};
     activities.forEach(item => {
-      const aid = lineToObject(item.id)['__id__']
+      const aid = lineToObject(item.id).__id__;
       if (item.schedule && item.schedule.schedules) {
-        nData[aid] = item.schedule.schedules
+        nData[aid] = item.schedule.schedules;
       }
-    })
-    return nData
+    });
+    return nData;
   }
 }
 
-module.exports = CalendarService
+module.exports = CalendarService;

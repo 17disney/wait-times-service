@@ -1,5 +1,7 @@
+'use strict';
+
 module.exports = app => {
-  const mongoose = app.mongoose
+  const mongoose = app.mongoose;
   const DsParkSchema = new mongoose.Schema({
     date: { type: String },
     local: { type: String },
@@ -31,15 +33,11 @@ module.exports = app => {
     allMarkDay: { type: Number },
     rankMarkDay: { type: Number },
 
-    show: {type: Number},
-    openAtt: {type: Number},
-    allFlowDay: {type: Number},
-    allMarkDay: {type: Number},
-    rankFlowDay: {type: Number},
-    rankMarkDay: {type: Number},
+    show: { type: Number },
+    openAtt: { type: Number },
 
-    utime: { type: Number }
-  })
+    utime: { type: Number },
+  });
 
-  return mongoose.model('DsPark', DsParkSchema, 'ds_parks')
-}
+  return mongoose.model('DsPark', DsParkSchema, 'ds_parks');
+};

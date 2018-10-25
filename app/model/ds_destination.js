@@ -1,5 +1,7 @@
+'use strict';
+
 module.exports = app => {
-  const mongoose = app.mongoose
+  const mongoose = app.mongoose;
   const DsDestinationSchema = new mongoose.Schema(
     {
       name: { type: String },
@@ -23,13 +25,13 @@ module.exports = app => {
       groupNum: { type: Number }, // 每组人数 x/分钟
       visible: { type: Boolean },
       updataAt: { type: Date },
-      createAt: { type: Date }
+      createAt: { type: Date },
     },
     { versionKey: false }
-  )
+  );
 
-  DsDestinationSchema.index({ id: 1 })
-  DsDestinationSchema.index({ local: 1 })
+  DsDestinationSchema.index({ id: 1 });
+  DsDestinationSchema.index({ local: 1 });
 
-  return mongoose.model('DsDestination', DsDestinationSchema, 'ds_destinations')
-}
+  return mongoose.model('DsDestination', DsDestinationSchema, 'ds_destinations');
+};

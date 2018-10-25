@@ -1,26 +1,28 @@
-const Service = require('egg').Service
-const moment = require('moment')
-const {dateRangeList, sortByDate} = require('../utils')
+'use strict';
+
+const Service = require('egg').Service;
+const moment = require('moment');
+const { dateRangeList, sortByDate } = require('../utils');
 
 class DataService extends Service {
   fillDate(st, et, data) {
-    const dateSet = new Set(dateRangeList(st, et))
+    const dateSet = new Set(dateRangeList(st, et));
     data.forEach(item => {
-      dateSet.delete(item.date)
-    })
+      dateSet.delete(item.date);
+    });
 
-    const nullLength = [...dateSet].length
+    const nullLength = [ ...dateSet ].length;
 
     if (nullLength > 0) {
-      for (let date of dateSet) {
+      for (const date of dateSet) {
         data.push({
-          date
-        })
+          date,
+        });
       }
-      data = sortByDate(data)
+      data = sortByDate(data);
     }
-    return data
+    return data;
   }
 }
 
-module.exports = DataService
+module.exports = DataService;

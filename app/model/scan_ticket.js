@@ -1,5 +1,7 @@
+'use strict';
+
 module.exports = app => {
-  const mongoose = app.mongoose
+  const mongoose = app.mongoose;
   const ScanTicketSchema = new mongoose.Schema({
     date: { type: String },
     local: { type: String },
@@ -10,8 +12,8 @@ module.exports = app => {
     availableCount: { type: Number },
     availableList: { type: Array },
 
-    utime: { type: Number }
-  })
+    utime: { type: Number },
+  });
 
-  return mongoose.model('ScanTicket', ScanTicketSchema, 'scan_tickets')
-}
+  return mongoose.model('ScanTicket', ScanTicketSchema, 'scan_tickets');
+};
