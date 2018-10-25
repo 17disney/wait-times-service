@@ -1,0 +1,8 @@
+{
+  "extends": "eslint-config-egg",
+  "parser": "babel-eslint",
+  "rules": {
+    "no-unused-vars": "off",
+    "linebreak-style": [0 ,"error", "windows"]
+  }
+}
