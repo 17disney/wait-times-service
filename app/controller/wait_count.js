@@ -1,6 +1,7 @@
 'use strict';
 
 const Controller = require('egg').Controller;
+const { parkList } = require('../utils/park-list');
 
 // 等待统计查询
 class WaitCountController extends Controller {
@@ -16,7 +17,7 @@ class WaitCountController extends Controller {
     };
 
     this.localRule = {
-      local: { type: 'enum', values: [ 'shanghai' ], required: true },
+      local: { type: 'enum', values: parkList.map(_ => _.local), required: true },
     };
   }
   // 项目等候时间范围查询
