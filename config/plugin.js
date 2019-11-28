@@ -3,14 +3,14 @@
 module.exports = {
   mongoose: {
     enable: true,
-    package: 'egg-mongoose'
+    package: 'egg-mongoose',
   },
   validate: {
     enable: true,
-    package: 'egg-validate'
+    package: 'egg-validate',
   },
   cors: {
     enable: true,
-    package: 'egg-cors'
-  }
-}
+    package: 'egg-cors',
+  },
+};

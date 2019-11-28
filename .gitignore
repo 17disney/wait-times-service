@@ -8,3 +8,4 @@ logs
 run
 .idea
 coverage
+app/public

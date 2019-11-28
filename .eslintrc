@@ -3,6 +3,8 @@
   "parser": "babel-eslint",
   "rules": {
     "no-unused-vars": "off",
+    "no-unreachable": "off",
+    "strict": "off",
     "linebreak-style": [0 ,"error", "windows"]
   }
 }

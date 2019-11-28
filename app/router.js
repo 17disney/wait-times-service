@@ -37,4 +37,6 @@ module.exports = app => {
 
   router.get('/ticket/available/:local', controller.ticket.available);
   router.get('/ticket/available/:local/:date', controller.ticket.availableDate);
+
+  router.get('/destinations/download', controller.destinations.download);
 };
