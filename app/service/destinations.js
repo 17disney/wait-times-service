@@ -11,13 +11,48 @@ function exportMedia(item) {
 
 module.exports = app => {
   class Controller extends app.Controller {
-    async download() {
+    async getScan() {
       const res = await this.ctx.service.api.disneyScan({
         url: 'api/disneyEtl/destinations/lasted',
       });
 
       const { data, date } = res;
       const { added: list } = data;
+      return list;
+    }
+
+    async sync() {
+      const list = await this.getScan();
+
+      // 图片是否已缓存
+      // 未缓存触发缓存，缓存失败，标记状态0
+      // 替换图片路径
+      // 是否需要更新
+      // 是否需要更新缓存
+      //
+      for (const item of list) {
+
+        await this.ctx.model.Destination.update({
+
+        });
+      }
+      // const nList = []
+
+      // list.forEach(item => {
+      //   nList.push({
+      //     id: item.id,
+      //     type: item.type
+      //     cacheId: item.cacheId
+      //     title: item.name
+      //     cacheId: item.cacheId
+      //   })
+      // })
+
+      return list;
+    }
+
+    async download() {
+      const list = await this.getScan();
       const medias = [];
 
       list.forEach(item => {
