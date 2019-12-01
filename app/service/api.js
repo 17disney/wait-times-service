@@ -7,7 +7,7 @@ module.exports = app => {
       return new Promise((resolve, reject) => {
         axios({
           method,
-          url: `http://localhost:8001/${url}`,
+          url: `http://home-u1.xanke.net:8001/${url}`,
           params,
         }).then(response => {
           resolve(response.data);

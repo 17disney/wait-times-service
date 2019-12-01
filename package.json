@@ -22,6 +22,7 @@
   "devDependencies": {
     "autod": "^3.0.1",
     "autod-egg": "^1.0.0",
+    "cross-env": "^6.0.3",
     "egg-bin": "^4.3.5",
     "egg-ci": "^1.8.0",
     "egg-mock": "^3.13.0",
@@ -33,8 +34,8 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --port=80 --title=wait-times-service",
-    "docker": "egg-scripts start --port=80 --title=wait-times-service",
+    "start": "cross-env EGG_SERVER_ENV=local egg-bin dev",
+    "prod": "cross-env EGG_SERVER_ENV=prod egg-scripts start --port=80",
     "stop": "egg-scripts stop",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",

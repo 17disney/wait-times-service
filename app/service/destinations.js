@@ -9,6 +9,39 @@ function exportMedia(item) {
   return list;
 }
 
+function formatMedia(mediaList = []) {
+  mediaList.forEach(item => {
+    const { path } = this.ctx.helper.parseUrl(item.url);
+    item.url = path.split('/').join('__');
+  });
+  return mediaList;
+}
+
+function arrayDiff(arr1, arr2) {
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+
+  const diff = [];
+  for (const item of set1) {
+    if (!set2.has(item)) diff.push(item);
+  }
+
+  return diff;
+}
+// 根据 url 生成附件列表
+function generAttachmentList(medias) {
+  const list = [];
+  medias.forEach(url => {
+    const { path } = this.ctx.helper.parseUrl(url);
+    const item = {
+      file: path.split('/').join('__'),
+      type: 'disneyScan',
+      sourceUrl: url,
+    };
+    list.push(item);
+  });
+}
+
 module.exports = app => {
   class Controller extends app.Controller {
     async getScan() {
@@ -31,81 +64,50 @@ module.exports = app => {
       // 是否需要更新缓存
       //
       for (const item of list) {
-
-        await this.ctx.model.Destination.update({
-
-        });
+        item.medias = formatMedia(item.medias);
       }
-      // const nList = []
 
-      // list.forEach(item => {
-      //   nList.push({
-      //     id: item.id,
-      //     type: item.type
-      //     cacheId: item.cacheId
-      //     title: item.name
-      //     cacheId: item.cacheId
-      //   })
-      // })
-
+      await this.ctx.model.Destination.create(list);
       return list;
     }
 
     async download() {
       const list = await this.getScan();
-      const medias = [];
 
+      // 读取媒体列表
+      const medias = [];
       list.forEach(item => {
         medias.push(...exportMedia(item));
       });
+      const failList = await this.saveMediaList(medias);
 
-
-      await this.saveList(medias);
-      const downloadList = await this.getDownloadList();
-      await this.saveFile(downloadList);
-
-      return medias;
-    }
-
-    async saveList(medias) {
-      const list = [];
-
-      medias.forEach(url => {
-        const { path } = this.ctx.helper.parseUrl(url);
-        const file = path.split('/').join('__');
-
-        const item = {
-          file,
-          type: 'disneyScan',
-          sourceUrl: url,
-          isDownload: false,
-        };
-        list.push(item);
-      });
-
-      for (const item of list) {
-        const { file } = item;
-        await this.ctx.model.Attachments.update(
-          { file, isDownload: false },
-          {
-            $set: item,
-          },
-          {
-            upsert: true,
-          }
-        );
+      if (failList.length === 0) {
+        //
+        await this.sync(list);
       }
+      // const downloadList = await this.getDownloadList();
+      // await this.saveFile(downloadList);
+
     }
 
-    async getDownloadList() {
-      const list = await this.ctx.model.Attachments.find({
-        isDownload: false,
+    async saveMediaList(medias) {
+      const list = generAttachmentList(medias);
+
+      const sourceUrlList = list.map(_ => _.sourceUrl);
+      const oldMediaList = await this.ctx.model.Attachments.find({
+        sourceUrl: { $in: sourceUrlList },
       });
 
-      return list;
+      const downedList = oldMediaList.map(_ => _.sourceUrl);
+      const downloadList = arrayDiff(sourceUrlList, downedList);
+
+      await this.downloadByMedias(downloadList);
     }
 
-    async saveFile(list) {
+    async downloadByMedias(medias) {
+      const list = generAttachmentList(medias);
+
+      const failList = [];
       for (const item of list) {
         const { sourceUrl, file } = item;
         const filepath = `app/public/${file}`;
@@ -116,11 +118,7 @@ module.exports = app => {
           const { size } = states;
 
           if (size > 0) {
-            await this.ctx.model.Attachments.update({
-              file,
-            }, {
-              isDownload: true,
-            });
+            await this.ctx.model.Attachments.create(item);
             isDownload = true;
           } else {
             fs.unlinkSync(filepath);
@@ -129,19 +127,18 @@ module.exports = app => {
 
         if (!isDownload) {
           try {
-            console.log('download', isDownload);
+            console.log('download', sourceUrl);
             await this.ctx.service.download.save(sourceUrl, filepath);
           } catch (e) {
+            failList.push(item);
             return;
           }
 
-          await this.ctx.model.Attachments.update({
-            file,
-          }, {
-            isDownload: true,
-          });
+          await this.ctx.model.Attachments.create(item);
         }
       }
+
+      return failList;
     }
   }
   return Controller;

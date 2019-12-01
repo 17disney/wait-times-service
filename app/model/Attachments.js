@@ -10,10 +10,6 @@ module.exports = app => {
     type: { type: String },
     cdnUrl: { type: String },
     size: { type: Number },
-    isDownload: {
-      type: Boolean,
-      default: false,
-    },
   });
 
   return mongoose.model('Attachments', Attachments, 'Attachments');
