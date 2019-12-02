@@ -7,7 +7,7 @@ class DestinationsService extends Service {
     const find = {
       local,
     };
-    const data = await this.ctx.model.ScanDestination.findOne(find, {
+    const data = await this.ctx.model.ScanDestinations.findOne(find, {
       _id: 0,
       local: 0,
       // date: 0
@@ -20,7 +20,7 @@ class DestinationsService extends Service {
     const find = {
       local,
     };
-    const data = await this.ctx.model.DsDestination.find(find, {
+    const data = await this.ctx.model.DsDestinations.find(find, {
       _id: 0,
       local: 0,
       date: 0,
@@ -34,12 +34,11 @@ class DestinationsService extends Service {
       local,
       type,
     };
-    const data = await this.ctx.model.DsDestination.find(find, {
+    const data = await this.ctx.model.DsDestinations.find(find, {
       _id: 0,
       local: 0,
       date: 0,
     });
-
     return data;
   }
 
@@ -47,7 +46,7 @@ class DestinationsService extends Service {
     const find = {
       id,
     };
-    const ret = await this.ctx.model.DsDestination.update(
+    const ret = await this.ctx.model.DsDestinations.update(
       find,
       {
         $set: data,
