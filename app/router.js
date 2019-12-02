@@ -12,11 +12,10 @@ module.exports = app => {
   router.get('/schedules/pre/:local', controller.explorer.schedulesPre);
   router.get('/schedules/attractions/:id', controller.explorer.schedulesList);
 
-  router.get('/destinations/park/:local', controller.explorer.destinations);
-  // router.put('/destinations/park/:local/:id', controller.explorer.updateDestinationsId)
-  router.get('/destinations/raw/:local', controller.explorer.destinationsRaw);
+  router.get('/destinations/park/:local', controller.destinations.park);
+  router.get('/destinations/sync', controller.destinations.sync);
 
-  router.get('/calendars/:local', controller.calendar.list);
+  // router.get('/wait-times/sync/date')
 
   router.get('/wait-times/home/:local/:date', controller.waitTimes.attractions);
   // router.get('/wait-times/home/:local', controller.waitCount.home)
@@ -38,6 +37,4 @@ module.exports = app => {
   router.get('/ticket/available/:local', controller.ticket.available);
   router.get('/ticket/available/:local/:date', controller.ticket.availableDate);
 
-  router.get('/destinations/download', controller.destinations.download);
-  router.get('/destinations/sync', controller.destinations.sync);
 };

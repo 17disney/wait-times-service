@@ -9,8 +9,6 @@ function exportMedia(item) {
   return list;
 }
 
-
-
 function arrayDiff(arr1, arr2) {
   const set1 = new Set(arr1);
   const set2 = new Set(arr2);
@@ -24,7 +22,7 @@ function arrayDiff(arr1, arr2) {
 }
 
 module.exports = app => {
-  class Controller extends app.Controller {
+  class Service extends app.Service {
     formatMedia(mediaList = []) {
       mediaList.forEach(item => {
         const { path } = this.ctx.helper.parseUrl(item.url);
@@ -44,7 +42,7 @@ module.exports = app => {
         };
         list.push(item);
       });
-      return list
+      return list;
     }
 
     async getScan() {
@@ -53,19 +51,13 @@ module.exports = app => {
       });
 
       const { data, date } = res;
-      const { added: list } = data;
-      return list;
+      const { added: list, facetGroups } = data;
+      return { list, facetGroups };
     }
 
-    async sync(list) {
-      // 图片是否已缓存
-      // 未缓存触发缓存，缓存失败，标记状态0
-      // 替换图片路径
-      // 是否需要更新
-      // 是否需要更新缓存
-      //
+    async saveList(list, { local }) {
       for (const item of list) {
-        item.local = "shanghai";
+        item.local = local;
         item.medias = this.formatMedia(item.medias);
 
         const { id } = item;
@@ -75,7 +67,7 @@ module.exports = app => {
             $set: item
           },
           {
-            upsert: true,
+            upsert: true
           }
         );
       }
@@ -83,10 +75,10 @@ module.exports = app => {
       return list;
     }
 
-    async download() {
-      const list = await this.getScan();
-
-      // 读取媒体列表
+    async sync() {
+      const { list, facetGroups } = await this.getScan();
+      const local = "shanghai";
+      // 保存媒体列表
       const medias = [];
       list.forEach(item => {
         medias.push(...exportMedia(item));
@@ -94,10 +86,9 @@ module.exports = app => {
       const failList = await this.saveMediaList(medias);
 
       if (failList.length === 0) {
-        await this.sync(list);
+        await this.saveList(list, { local });
+        await this.saveGroups(facetGroups, { local });
       }
-      // const downloadList = await this.getDownloadList();
-      // await this.saveFile(downloadList);
     }
 
     async saveMediaList(medias) {
@@ -114,6 +105,21 @@ module.exports = app => {
       return await this.downloadByMedias(downloadList);
     }
 
+    async saveGroups(data, { local }) {
+      await this.ctx.model.DestinationsGroups.update(
+        { local },
+        {
+          $set: {
+            local,
+            data
+          }
+        },
+        {
+          upsert: true
+        }
+      );
+    }
+
     async downloadByMedias(medias) {
       const list = this.generAttachmentList(medias);
 
@@ -126,7 +132,6 @@ module.exports = app => {
         if (fs.existsSync(filepath)) {
           const states = fs.statSync(filepath);
           const { size } = states;
-
           if (size > 0) {
             await this.ctx.model.Attachments.create(item);
             isDownload = true;
@@ -142,13 +147,16 @@ module.exports = app => {
             failList.push(item);
             return;
           }
-
           await this.ctx.model.Attachments.create(item);
         }
       }
-
       return failList;
     }
+
+    async findByLocal(local) {
+      const data = await this.ctx.model.Destinations.findOne({ local });
+      return data;
+    }
   }
-  return Controller;
-};
+  return Service
+}
