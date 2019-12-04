@@ -11,7 +11,7 @@ module.exports = app => {
       const groups = await this.ctx.service.destinations.groups.findByLocal(local);
       this.ctx.body = {
         list,
-        groups
+        groups,
       };
     }
   }

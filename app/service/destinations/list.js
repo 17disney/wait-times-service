@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require('fs');
 
 function exportMedia(item) {
   let list = [];
@@ -23,10 +23,20 @@ function arrayDiff(arr1, arr2) {
 
 module.exports = app => {
   class Service extends app.Service {
+    async getScan() {
+      const res = await this.ctx.service.api.disneyScan({
+        url: 'api/disneyEtl/destinations/lasted',
+      });
+
+      const { data, date } = res;
+      const { added: list, facetGroups } = data;
+      return { list, facetGroups };
+    }
+
     formatMedia(mediaList = []) {
       mediaList.forEach(item => {
         const { path } = this.ctx.helper.parseUrl(item.url);
-        item.url = path.split("/").join("__");
+        item.url = path.split('/').join('__');
       });
       return mediaList;
     }
@@ -36,23 +46,13 @@ module.exports = app => {
       medias.forEach(url => {
         const { path } = this.ctx.helper.parseUrl(url);
         const item = {
-          file: path.split("/").join("__"),
-          type: "disneyScan",
-          sourceUrl: url
+          file: path.split('/').join('__'),
+          type: 'disneyScan',
+          sourceUrl: url,
         };
         list.push(item);
       });
       return list;
-    }
-
-    async getScan() {
-      const res = await this.ctx.service.api.disneyScan({
-        url: "api/disneyEtl/destinations/lasted"
-      });
-
-      const { data, date } = res;
-      const { added: list, facetGroups } = data;
-      return { list, facetGroups };
     }
 
     async saveList(list, { local }) {
@@ -64,10 +64,10 @@ module.exports = app => {
         await this.ctx.model.Destinations.update(
           { id },
           {
-            $set: item
+            $set: item,
           },
           {
-            upsert: true
+            upsert: true,
           }
         );
       }
@@ -77,7 +77,7 @@ module.exports = app => {
 
     async sync() {
       const { list, facetGroups } = await this.getScan();
-      const local = "shanghai";
+      const local = 'shanghai';
       // 保存媒体列表
       const medias = [];
       list.forEach(item => {
@@ -96,7 +96,7 @@ module.exports = app => {
 
       const sourceUrlList = list.map(_ => _.sourceUrl);
       const oldMediaList = await this.ctx.model.Attachments.find({
-        sourceUrl: { $in: sourceUrlList }
+        sourceUrl: { $in: sourceUrlList },
       });
 
       const downedList = oldMediaList.map(_ => _.sourceUrl);
@@ -111,11 +111,11 @@ module.exports = app => {
         {
           $set: {
             local,
-            data
-          }
+            data,
+          },
         },
         {
-          upsert: true
+          upsert: true,
         }
       );
     }
@@ -158,5 +158,5 @@ module.exports = app => {
       return data;
     }
   }
-  return Service
-}
+  return Service;
+};
