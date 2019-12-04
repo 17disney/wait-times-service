@@ -14,8 +14,8 @@ module.exports = app => {
 
   router.get('/destinations/park/:local', controller.destinations.park);
   router.get('/destinations/sync', controller.destinations.sync);
-
-  // router.get('/wait-times/sync/date')
+  router.get('/schedules/sync/date/:date', controller.schedules.sync.date);
+  router.get('/waitTimes/sync/today', controller.waitTimes.sync.today);
 
   router.get('/wait-times/home/:local/:date', controller.waitTimes.attractions);
   // router.get('/wait-times/home/:local', controller.waitCount.home)
@@ -36,5 +36,4 @@ module.exports = app => {
 
   router.get('/ticket/available/:local', controller.ticket.available);
   router.get('/ticket/available/:local/:date', controller.ticket.availableDate);
-
 };
