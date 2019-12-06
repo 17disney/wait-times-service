@@ -1,40 +1,65 @@
 const moment = require('moment');
+const { arrayAvg } = require('../../utils/array');
 
-function formatGranularity({ startX, endX, list, granularity }) {
-  const timeList = [];
-  startX = Number(startX);
-  endX = Number(endX);
+function formatGranularity({ date, startTime, endTime, list, granularity }) {
+  const startX = Number(moment(`${date} ${startTime}`, 'YYYY-MM-DD HH:mm:ss').format('X'));
+  const endX = Number(moment(`${date} ${endTime}`, 'YYYY-MM-DD HH:mm:ss').format('X'));
+  const timeGroupList = [];
+
   for (let i = startX; i < endX; i += granularity) {
-    timeList.push({
+    timeGroupList.push({
       start: i,
       end: i + granularity,
-      item: [],
+      items: [],
     });
   }
 
   list.forEach(item => {
     const num = moment(item.date).format('X');
-    timeList.forEach(_ => {
+    timeGroupList.forEach(_ => {
       const { start, end } = _;
       if (num >= start && num < end) {
-        _.item.push(item);
+        _.items.push(item);
       }
     });
   });
 
-  return timeList;
+  const waitList = [];
+  timeGroupList.forEach(item => {
+    waitList.push({
+      date: moment(item.start, 'X').format('YYYY-MM-DD HH:mm:ss'),
+      minutes: Math.round(arrayAvg(item.items.map(_ => _.minutes))),
+    });
+  });
+
+  return waitList;
 }
 
-function formatDate({ date, startTime, endTime, list, granularity = 3600 }) {
+function formatMinutes(val) {
+  val = Number(val);
+  return isNaN(val) || val === 0 ? 0 : val;
+}
+
+function formatScanWaitList({ date, startTime, endTime, list }) {
   const startX = moment(`${date} ${startTime}`, 'YYYY-MM-DD HH:mm:ss').format('X');
   const endX = moment(`${date} ${endTime}`, 'YYYY-MM-DD HH:mm:ss').format('X');
 
-  const data = list.filter(_ => {
+  const waitList = list.filter(_ => {
     const time = moment(_.date).format('X');
     return time > startX && time < endX;
+  }).map(_ => {
+    return {
+      ..._,
+      minutes: formatMinutes(_.minutes),
+    };
   });
 
-  return formatGranularity({ startX, endX, list: data, granularity });
+  return waitList;
+
+  // return {
+  //   date: waitList.map(_ => _.date),
+  //   minutes: waitList.map(_ => formatMinutes(_.minutes)),
+  // };
 }
 
 module.exports = app => {
@@ -65,19 +90,30 @@ module.exports = app => {
 
     async syncByDate(date) {
       const list = await this.getByDate(date);
-      const waitList = await this.getScan(date);
+      const allWaitList = await this.getScan(date);
 
-      list.forEach(item => {
+      for (const item of list) {
         const { id, startTime, endTime, status } = item;
 
         if (status === 'Operating') {
-          if (waitList[id] && waitList[id].length) {
-            item.waitList = formatDate({ date, startTime, endTime, list: waitList[id] });
+          if (allWaitList[id] && allWaitList[id].length) {
+            const waitList = formatScanWaitList({ date, startTime, endTime, list: allWaitList[id] });
+            item.waitList = waitList;
+            item.waitListHour = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 3600 });
+            item.waitList10M = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 600 });
+
+            await this.ctx.model.WaitTimes.update({ id, date }, {
+              $set: {
+                waitList,
+                waitListHour: item.waitListHour,
+                waitList10M: item.waitList10M,
+              },
+            });
           }
         }
-      });
+      }
 
-      return list;
+      return list[0];
     }
   }
   return Service;

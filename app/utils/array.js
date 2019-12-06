@@ -15,3 +15,16 @@ exports.listOpen = function(list, key) {
   });
   return nList;
 };
+
+exports.arraySum = function arraySum(arr) {
+  return arr.reduce((prev, curr, idx, arr) => {
+    return prev + curr;
+  });
+};
+
+exports.arrayAvg = function arrayAvg(arr) {
+  const sum = arr.reduce((prev, curr, idx, arr) => {
+    return prev + curr;
+  });
+  return sum / arr.length;
+};
