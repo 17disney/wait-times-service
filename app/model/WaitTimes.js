@@ -11,8 +11,8 @@ module.exports = app => {
     status: { type: String },
     // waitMax: { type: Number },
     // waitAvg: { type: Number },
-    // waitList: { type: Array },
-    // waitHour: { type: Array },
+    waitList: { type: Array },
+    waitHour: { type: Array },
     // waitMaxList: { type: Array },
 
     // waitFt: { type: Number },

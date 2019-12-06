@@ -18,7 +18,6 @@ function formatItem(item) {
   };
 }
 
-
 module.exports = app => {
   class Service extends app.Service {
     async getScan(date) {
@@ -37,11 +36,8 @@ module.exports = app => {
 
     async getDate(date) {
       const res = await this.getScan(date);
-
       const { data } = res;
       const list = data.map(formatItem).filter(_ => _.schedules);
-      console.log(list);
-
       return list;
     }
 
