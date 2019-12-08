@@ -7,5 +7,15 @@ module.exports = appInfo => {
     url: 'mongodb://localhost:27017/disney_park',
   };
 
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+  };
+  config.cors = {
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+  };
+
   return config;
 };
