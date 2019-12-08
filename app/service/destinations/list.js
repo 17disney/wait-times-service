@@ -153,8 +153,8 @@ module.exports = app => {
       return failList;
     }
 
-    async findByLocal(local) {
-      const data = await this.ctx.model.Destinations.findOne({ local });
+    async findByDest(dest) {
+      const data = await this.ctx.model.Destinations.findOne();
       return data;
     }
   }

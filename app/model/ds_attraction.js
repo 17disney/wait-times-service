@@ -4,7 +4,7 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const DsAttractionSchema = new mongoose.Schema({
     date: { type: String },
-    local: { type: String },
+    dest: { type: String },
     id: { type: String },
     startTime: { type: String },
     endTime: { type: String },

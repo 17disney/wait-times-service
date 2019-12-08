@@ -5,10 +5,10 @@ module.exports = app => {
       this.ctx.body = data;
     }
 
-    async park() {
-      const { local } = this.ctx.params;
-      const list = await this.ctx.service.destinations.list.findByLocal(local);
-      const groups = await this.ctx.service.destinations.groups.findByLocal(local);
+    async dest() {
+      const { dest } = this.ctx.params;
+      const list = await this.ctx.service.destinations.list.findByDest(dest);
+      const groups = await this.ctx.service.destinations.groups.findByDest(dest);
       this.ctx.body = {
         list,
         groups,

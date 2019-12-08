@@ -44,22 +44,25 @@ function formatScanWaitList({ date, startTime, endTime, list }) {
   const startX = moment(`${date} ${startTime}`, 'YYYY-MM-DD HH:mm:ss').format('X');
   const endX = moment(`${date} ${endTime}`, 'YYYY-MM-DD HH:mm:ss').format('X');
 
+  let waitCount = 0;
   const waitList = list.filter(_ => {
     const time = moment(_.date).format('X');
     return time > startX && time < endX;
   }).map(_ => {
+    const minutes = formatMinutes(_.minutes);
+    waitCount += minutes;
     return {
       ..._,
-      minutes: formatMinutes(_.minutes),
+      minutes,
     };
   });
 
-  return waitList;
+  const waitAvg = waitCount / list.length;
 
-  // return {
-  //   date: waitList.map(_ => _.date),
-  //   minutes: waitList.map(_ => formatMinutes(_.minutes)),
-  // };
+  return {
+    waitAvg,
+    waitList,
+  };
 }
 
 module.exports = app => {
@@ -97,14 +100,14 @@ module.exports = app => {
 
         if (status === 'Operating') {
           if (allWaitList[id] && allWaitList[id].length) {
-            const waitList = formatScanWaitList({ date, startTime, endTime, list: allWaitList[id] });
+            const { waitList, waitCount } = formatScanWaitList({ date, startTime, endTime, list: allWaitList[id] });
             item.waitList = waitList;
+            item.waitCount = waitCount;
             item.waitListHour = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 3600 });
             item.waitList10M = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 600 });
 
             await this.ctx.model.WaitTimes.update({ id, date }, {
               $set: {
-                waitList,
                 waitListHour: item.waitListHour,
                 waitList10M: item.waitList10M,
               },

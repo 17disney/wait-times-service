@@ -7,7 +7,7 @@ module.exports = app => {
     type: { type: String },
     title: { type: String },
     ancestors: { type: Array },
-    local: { type: String },
+    dest: { type: String },
     descriptions: { type: Array },
     relatedLocations: { type: Array },
     webLink: { type: String },
