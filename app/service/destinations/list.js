@@ -154,7 +154,7 @@ module.exports = app => {
     }
 
     async findByDest(dest) {
-      const data = await this.ctx.model.Destinations.findOne();
+      const data = await this.ctx.model.Destinations.find();
       return data;
     }
   }
