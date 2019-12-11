@@ -72,7 +72,7 @@ module.exports = app => {
       return data;
     }
 
-    async getScan(date) {
+    async fetchScan(date) {
       let url;
       if (date) {
         url = `api/disneyEtl/waitTimes/history/${date}`;
@@ -86,19 +86,27 @@ module.exports = app => {
     }
 
     async today() {
-      const data = await this.getScan();
+      const data = await this.fetchScan();
       const item = data['hotelSHDLH;entityType=resort;destination=shdr'];
       return item;
     }
 
     async syncByDate(date) {
       const list = await this.getByDate(date);
-      const allWaitList = await this.getScan(date);
+      if (!list.length) {
+        return {
+          error: '未同步时间表',
+        };
+      }
+      const allWaitList = await this.fetchScan(date);
+
+      let operatingTotal = 0;
 
       for (const item of list) {
         const { id, startTime, endTime, status } = item;
 
         if (status === 'Operating') {
+          operatingTotal++;
           if (allWaitList[id] && allWaitList[id].length) {
             const { waitList, waitCount } = formatScanWaitList({ date, startTime, endTime, list: allWaitList[id] });
             item.waitList = waitList;
@@ -116,7 +124,7 @@ module.exports = app => {
         }
       }
 
-      return list[0];
+      return { operatingTotal };
     }
   }
   return Service;
