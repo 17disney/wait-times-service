@@ -13,6 +13,7 @@ module.exports = app => {
     waitListHour: { type: Array },
     waitList10M: { type: Array },
     waitCount: { type: Number },
+    utime: { type: Number },
   });
 
   return mongoose.model('WaitTimes', WaitTimes, 'WaitTimes');

@@ -26,10 +26,13 @@ function formatGranularity({ date, startTime, endTime, list, granularity }) {
 
   const waitList = [];
   timeGroupList.forEach(item => {
-    waitList.push({
-      date: moment(item.start, 'X').format('YYYY-MM-DD HH:mm:ss'),
-      minutes: Math.round(arrayAvg(item.items.map(_ => _.minutes))),
-    });
+    const itemMinutelist = item.items.map(_ => _.minutes);
+    if (itemMinutelist.length) {
+      waitList.push({
+        date: moment(item.start, 'X').format('YYYY-MM-DD HH:mm:ss'),
+        minutes: Math.round(arrayAvg(itemMinutelist)),
+      });
+    }
   });
 
   return waitList;
@@ -67,7 +70,7 @@ function formatScanWaitList({ date, startTime, endTime, list }) {
 
 module.exports = app => {
   class Service extends app.Service {
-    async getByDate(date) {
+    async findByDate(date) {
       const data = await this.ctx.model.WaitTimes.find({ date });
       return data;
     }
@@ -92,7 +95,7 @@ module.exports = app => {
     }
 
     async syncByDate(date) {
-      const list = await this.getByDate(date);
+      const list = await this.findByDate(date);
       if (!list.length) {
         return {
           error: '未同步时间表',
@@ -109,6 +112,8 @@ module.exports = app => {
           operatingTotal++;
           if (allWaitList[id] && allWaitList[id].length) {
             const { waitList, waitCount } = formatScanWaitList({ date, startTime, endTime, list: allWaitList[id] });
+
+            if (!waitList.length) return;
             item.waitList = waitList;
             item.waitCount = waitCount;
             item.waitListHour = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 3600 });
@@ -116,6 +121,8 @@ module.exports = app => {
 
             await this.ctx.model.WaitTimes.update({ id, date }, {
               $set: {
+                waitList: item.waitList,
+                waitCount: item.waitCount,
                 waitListHour: item.waitListHour,
                 waitList10M: item.waitList10M,
               },

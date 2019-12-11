@@ -34,15 +34,9 @@ module.exports = app => {
       return data;
     }
 
-    async filterByDate(data, date) {
-      const list = data.map(formatItem).filter(_ => _.schedules);
-      return list;
-    }
-
-    // TODO
-    async getOneDay(date) {
-      let data = await this.getDate(date);
-      data = this.filterByDate(data.data, date);
+    async syncByDate(date) {
+      const scanData = await this.fetchScan(date);
+      const data = scanData.data.map(formatItem).filter(_ => _.schedules);
 
       const list = data.map(item => {
         const { schedules = [] } = item;
@@ -67,7 +61,9 @@ module.exports = app => {
         );
       }
 
-      return list;
+      return {
+        date,
+      };
     }
   }
   return Service;

@@ -7,18 +7,14 @@
 module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
-
-  router.get('/schedules/park/:local/:date', controller.explorer.schedules);
-  router.get('/schedules/pre/:local', controller.explorer.schedulesPre);
-  router.get('/schedules/attractions/:id', controller.explorer.schedulesList);
+  // 时间表
   router.get('/schedules/admin/sync', controller.schedules.admin.sync);
   router.get('/schedules/date/:date', controller.schedules.list.date);
-
+  // 资料
   router.get('/destinations/dest/:dest', controller.destinations.dest);
   router.get('/destinations/tasks/sync', controller.destinations.sync);
-
-  router.get('/waitTimes/sync/today', controller.waitTimes.sync.today);
-  router.get('/waitTimes/sync/dest', controller.waitTimes.sync.dest);
+  // 等候时间
+  router.get('/waitTimes/admin/sync', controller.waitTimes.admin.sync);
   router.get('/waitTimes/list/park', controller.waitTimes.list.park);
   router.get('/waitTimes/list/id', controller.waitTimes.list.id);
 
