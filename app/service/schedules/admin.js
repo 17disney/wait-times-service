@@ -20,7 +20,7 @@ function formatItem(item) {
 
 module.exports = app => {
   class Service extends app.Service {
-    async getScan(date) {
+    async fetchScan(date) {
       let url;
       if (date) {
         url = `api/disneyEtl/schedules/history/${date}`;
@@ -34,15 +34,15 @@ module.exports = app => {
       return data;
     }
 
-    async getDate(date) {
-      const res = await this.getScan(date);
-      const { data } = res;
+    async filterByDate(data, date) {
       const list = data.map(formatItem).filter(_ => _.schedules);
       return list;
     }
 
+    // TODO
     async getOneDay(date) {
-      const data = await this.getDate(date);
+      let data = await this.getDate(date);
+      data = this.filterByDate(data.data, date);
 
       const list = data.map(item => {
         const { schedules = [] } = item;

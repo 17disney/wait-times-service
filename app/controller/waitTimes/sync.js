@@ -5,10 +5,16 @@ module.exports = app => {
       this.ctx.body = data;
     }
 
-    async date() {
-      const { date } = this.ctx.params;
-      const data = await this.ctx.service.waitTimes.sync.syncByDate(date);
-      this.ctx.body = data;
+    async dest() {
+      const { date, startDate, endDate, type } = this.ctx.query;
+
+      let result = [];
+      if (type === 'date') {
+        result = await this.ctx.service.waitTimes.sync.syncByDate(date);
+      } else if (type === 'dagerange') {
+        //
+      }
+      this.ctx.body = result;
     }
   }
   return Controller;
