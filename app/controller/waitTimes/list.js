@@ -8,7 +8,7 @@ module.exports = app => {
       this.paramsRule = {
         date: {
           date: { type: 'date', required: true },
-          granularity: { type: 'enum', values: [ 'hour', '10m' ], required: true },
+          granularity: { type: 'enum', values: [ 'hour', '10m', '1m' ], required: true },
         },
         daterange: {
           startDate: { type: 'date', required: true },
@@ -18,31 +18,23 @@ module.exports = app => {
     }
 
     async dest() {
-      const { date, startDate, endDate, type, granularity = 'hour' } = this.ctx.query;
+      const { date, granularity = 'hour' } = this.ctx.query;
       const { dest = 'shdr' } = this.ctx.params;
       this.ctx.validate(this.paramsBase, this.ctx.query);
-      this.ctx.validate(this.paramsRule[type], this.ctx.query);
+      this.ctx.validate(this.paramsRule.date, this.ctx.query);
 
       const params = {
         dest,
-        type,
+        date,
+        granularity,
       };
 
-      if (type === 'date') {
-        params.date = date;
-        params.granularity = granularity;
-        this.ctx.body = await this.ctx.service.waitTimes.list.getByDestDate(params);
-      } else if (type === 'daterange') {
-        params.startDate = startDate;
-        params.endDate = endDate;
-        this.ctx.body = await this.ctx.service.waitTimes.list.getByDestDaterange(params);
-      }
+      this.ctx.body = await this.ctx.service.waitTimes.list.getByDestDate(params);
     }
 
     async id() {
       const { date, startDate, endDate, type, granularity = 'hour' } = this.ctx.query;
       const { id } = this.ctx.params;
-      this.ctx.validate(this.paramsBase, this.ctx.query);
       this.ctx.validate(this.paramsRule[type], this.ctx.query);
 
       const params = {
@@ -53,11 +45,11 @@ module.exports = app => {
       if (type === 'date') {
         params.date = date;
         params.granularity = granularity;
-        this.ctx.body = await this.ctx.service.waitTimes.list.getByIdDate(params);
+        this.ctx.body = await this.ctx.service.waitTimes.list.getByIdDate(id, params);
       } else if (type === 'daterange') {
         params.startDate = startDate;
         params.endDate = endDate;
-        this.ctx.body = await this.ctx.service.waitTimes.list.getByIdDaterange(params);
+        this.ctx.body = await this.ctx.service.waitTimes.list.getByIdDaterange(id, params);
       }
     }
   }

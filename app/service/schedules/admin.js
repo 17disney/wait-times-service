@@ -1,4 +1,5 @@
 const { parseId } = require('../../utils/util');
+const moment = require('moment');
 
 function formatItem(item) {
   const { schedule, id } = item;
@@ -35,7 +36,8 @@ module.exports = app => {
     }
 
     async syncByDate(date, { alter = false } = {}) {
-      const scanData = await this.ctx.service.api.disneyScan(`schedules/history/${date}`);
+      const fetchDate = moment(date, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD');
+      const scanData = await this.ctx.service.api.disneyScan(`schedules/history/${fetchDate}`);
       const data = scanData.data.map(formatItem).filter(_ => _.schedules);
 
       const list = data.map(item => {

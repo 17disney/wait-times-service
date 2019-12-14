@@ -1,6 +1,5 @@
 const moment = require('moment');
 const { arrayAvg } = require('../../utils/array');
-const { parseId } = require('../../utils/util');
 
 // 时间粒度计算
 function formatGranularity({ date, startTime, endTime, list, granularity }) {
@@ -70,7 +69,7 @@ function formatScanWaitList({ date, startTime, endTime, list }) {
   });
 
   return {
-    waitTotal: waitTotal / total * ((endX - startX) / 60),
+    waitTotal: parseInt(waitTotal / total * ((endX - startX) / 60)),
     waitAvg: parseInt(waitTotal / total),
     waitMax,
     waitList,
@@ -109,7 +108,6 @@ module.exports = app => {
       for (const item of attList) {
         const { id, startTime, endTime, status } = item;
         if (status === 'Operating' && scanData[id] && scanData[id].length) {
-          operatingTotal++;
           const { waitList, waitTotal, waitAvg, waitMax } = formatScanWaitList({ date, startTime, endTime, list: scanData[id] });
           const waitListHour = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 3600 });
           const waitList10M = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 600 });
@@ -123,7 +121,7 @@ module.exports = app => {
               item.minutes += waitList[index].minutes;
             });
           }
-
+          operatingTotal++;
           destWaitAvg += waitAvg;
 
           await this.ctx.model.WaitTimes.update({ id, date }, {

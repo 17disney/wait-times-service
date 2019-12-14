@@ -27,24 +27,7 @@ module.exports = app => {
       return data;
     }
 
-    async getByDestDaterange({ dest, startDate, endDate }) {
-      const data = await this.ctx.model.WaitTimes.find({
-        date: {
-          $gte: startDate,
-          $lte: endDate,
-        },
-      }, {
-        _id: 0,
-        id: 1,
-        startTime: 1,
-        endTime: 1,
-        status: 1,
-        waitAvg: 1,
-      });
-      return data;
-    }
-
-    async getByIdDate({ id, date, granularity }) {
+    async getByIdDate(id, { date, granularity }) {
       const data = await this.ctx.model.WaitTimes.find({
         date,
         id,
@@ -58,20 +41,24 @@ module.exports = app => {
       return data;
     }
 
-    async getByIdDaterange({ id, startDate, endDate }) {
+    async getByIdDaterange(id, { startDate, endDate }) {
+      console.log(111, id);
       const data = await this.ctx.model.WaitTimes.find({
+        id,
         date: {
-          id,
           $gte: startDate,
           $lte: endDate,
         },
       }, {
         _id: 0,
         id: 1,
+        date: 1,
         startTime: 1,
         endTime: 1,
         status: 1,
+        waitTotal: 1,
         waitAvg: 1,
+        waitMax: 1,
       });
       return data;
     }
