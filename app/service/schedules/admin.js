@@ -1,3 +1,5 @@
+const { parseId } = require('../../utils/util');
+
 function formatItem(item) {
   const { schedule, id } = item;
 
@@ -23,31 +25,24 @@ module.exports = app => {
     async fetchScan(date) {
       let url;
       if (date) {
-        url = `api/disneyEtl/schedules/history/${date}`;
+        url = `schedules/history/${date}`;
       } else {
-        url = 'api/disneyEtl/schedules/lasted';
+        url = 'schedules/lasted';
       }
 
-      const data = await this.ctx.service.api.disneyScan({
-        url,
-      });
+      const data = await this.ctx.service.api.disneyScan(url);
       return data;
     }
 
-    async filterByDate(data, date) {
-      const list = data.map(formatItem).filter(_ => _.schedules);
-      return list;
-    }
-
-    // TODO
-    async getOneDay(date) {
-      let data = await this.getDate(date);
-      data = this.filterByDate(data.data, date);
+    async syncByDate(date, { alter = false } = {}) {
+      const scanData = await this.ctx.service.api.disneyScan(`schedules/history/${date}`);
+      const data = scanData.data.map(formatItem).filter(_ => _.schedules);
 
       const list = data.map(item => {
         const { schedules = [] } = item;
         return {
           id: item.id,
+          ...parseId(item.id),
           ...schedules.find(_ => _.date === date),
         };
       });
