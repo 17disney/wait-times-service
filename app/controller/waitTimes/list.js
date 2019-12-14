@@ -17,12 +17,9 @@ module.exports = app => {
       };
     }
 
-    async park() {
-      const { dest = 'shdr', date, startDate, endDate, type, granularity = 'hour' } = this.ctx.query;
-      const paramsRule = {
-        dest: { type: 'string', required: true },
-      };
-      this.ctx.validate(paramsRule, this.ctx.query);
+    async dest() {
+      const { date, startDate, endDate, type, granularity = 'hour' } = this.ctx.query;
+      const { dest = 'shdr' } = this.ctx.params;
       this.ctx.validate(this.paramsBase, this.ctx.query);
       this.ctx.validate(this.paramsRule[type], this.ctx.query);
 
@@ -43,11 +40,8 @@ module.exports = app => {
     }
 
     async id() {
-      const { id, date, startDate, endDate, type, granularity = 'hour' } = this.ctx.query;
-      const paramsRule = {
-        id: { type: 'string', required: true },
-      };
-      this.ctx.validate(paramsRule, this.ctx.query);
+      const { date, startDate, endDate, type, granularity = 'hour' } = this.ctx.query;
+      const { id } = this.ctx.params;
       this.ctx.validate(this.paramsBase, this.ctx.query);
       this.ctx.validate(this.paramsRule[type], this.ctx.query);
 

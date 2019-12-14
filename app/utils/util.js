@@ -93,3 +93,10 @@ function deepClone(source) {
 }
 
 exports.deepClone = deepClone;
+
+exports.parseId = str => {
+  const [ baseId, item1, item2 ] = str.split(';');
+  const type = item1.split('=')[1];
+  const dest = item2.split('=')[1];
+  return { baseId, type, dest };
+};
