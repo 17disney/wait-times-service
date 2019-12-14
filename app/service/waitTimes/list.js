@@ -1,13 +1,24 @@
 const { difference } = require('lodash/array');
 
+const GRANULARITY_LIST = [
+  {
+    columns: 'waitList',
+    type: '1m',
+  },
+  {
+    columns: 'waitList10M',
+    type: '10m',
+  },
+  {
+    columns: 'waitListHour',
+    type: 'hour',
+  },
+];
+
 function filterGranularity(type) {
-  const COLUMNS_MAP = {
-    '1m': 'waitList',
-    hour: 'waitListHour',
-    '10m': 'waitList10M',
-  };
+  const item = GRANULARITY_LIST.find(_ => _.type === type);
   return {
-    [COLUMNS_MAP[type]]: 1,
+    [item.columns]: 1,
   };
 }
 
@@ -28,7 +39,9 @@ module.exports = app => {
     }
 
     async getByIdDate(id, { date, granularity }) {
-      const data = await this.ctx.model.WaitTimes.find({
+      console.log(granularity);
+      const gItem = GRANULARITY_LIST.find(_ => _.type === granularity);
+      const data = await this.ctx.model.WaitTimes.findOne({
         date,
         id,
       }, {
@@ -38,11 +51,10 @@ module.exports = app => {
         status: 1,
         ...filterGranularity(granularity),
       });
-      return data;
+      return data[gItem.columns];
     }
 
     async getByIdDaterange(id, { startDate, endDate }) {
-      console.log(111, id);
       const data = await this.ctx.model.WaitTimes.find({
         id,
         date: {

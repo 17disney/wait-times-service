@@ -15,6 +15,20 @@ module.exports = app => {
       }
       this.ctx.body = result;
     }
+
+    async count() {
+      const { type } = this.ctx.query;
+
+      if (type === 'all') {
+        //
+      } else if (type === 'day') {
+        //
+      } else if (type === 'week') {
+        //
+      } else if (type === 'month') {
+        //
+      }
+    }
   }
   return Controller;
 };
