@@ -11,8 +11,8 @@ module.exports = app => {
   router.get('/admin/schedules/sync', controller.schedules.admin.sync);
   router.get('/schedules/date/:date', controller.schedules.list.date);
   // 资料
-  router.get('/destinations/dest/:dest', controller.destinations.dest);
   router.get('/admin/destinations/sync', controller.destinations.sync);
+  router.get('/destinations/dest/:dest', controller.destinations.dest);
   // 等候时间
   router.get('/admin/waitTimes/sync', controller.waitTimes.admin.sync);
   router.get('/waitTimes/dest/:dest', controller.waitTimes.list.dest);

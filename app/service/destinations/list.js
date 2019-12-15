@@ -24,11 +24,9 @@ function arrayDiff(arr1, arr2) {
 module.exports = app => {
   class Service extends app.Service {
     async getScan() {
-      const res = await this.ctx.service.api.disneyScan({
-        url: 'api/disneyEtl/destinations/lasted',
-      });
-
+      const res = await this.ctx.service.api.disneyScan('destinations/lasted');
       const { data, date } = res;
+      console.log(data);
       const { added: list, facetGroups } = data;
       return { list, facetGroups };
     }
@@ -55,9 +53,9 @@ module.exports = app => {
       return list;
     }
 
-    async saveList(list, { local }) {
+    async saveList(list, { dest }) {
       for (const item of list) {
-        item.local = local;
+        item.dest = dest;
         item.medias = this.formatMedia(item.medias);
 
         const { id } = item;
@@ -77,17 +75,18 @@ module.exports = app => {
 
     async sync() {
       const { list, facetGroups } = await this.getScan();
-      const local = 'shanghai';
+      const dest = 'shdr';
       // 保存媒体列表
       const medias = [];
       list.forEach(item => {
         medias.push(...exportMedia(item));
       });
+      console.log(medias);
       const failList = await this.saveMediaList(medias);
 
       if (failList.length === 0) {
-        await this.saveList(list, { local });
-        await this.saveGroups(facetGroups, { local });
+        await this.saveList(list, { dest });
+        await this.saveGroups(facetGroups, { dest });
       }
     }
 
@@ -105,12 +104,12 @@ module.exports = app => {
       return await this.downloadByMedias(downloadList);
     }
 
-    async saveGroups(data, { local }) {
+    async saveGroups(data, { dest }) {
       await this.ctx.model.DestinationsGroups.update(
-        { local },
+        { dest },
         {
           $set: {
-            local,
+            dest,
             data,
           },
         },
@@ -128,19 +127,19 @@ module.exports = app => {
         const { sourceUrl, file } = item;
         const filepath = `app/public/${file}`;
 
-        let isDownload = false;
+        let canDownload = true;
         if (fs.existsSync(filepath)) {
           const states = fs.statSync(filepath);
-          const { size } = states;
-          if (size > 0) {
+          // 已下载
+          if (states.size > 0) {
             await this.ctx.model.Attachments.create(item);
-            isDownload = true;
+            canDownload = false;
           } else {
             fs.unlinkSync(filepath);
           }
         }
 
-        if (!isDownload) {
+        if (canDownload) {
           try {
             await this.ctx.service.download.save(sourceUrl, filepath);
           } catch (e) {
