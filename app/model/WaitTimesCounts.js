@@ -4,13 +4,12 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const WaitTimesCounts = new mongoose.Schema({
     id: { type: String },
-    type: { type: String },
-    date: { type: String },
-    status: { type: String },
-    compare: { type: Object },
+    countType: { type: String },
+    date: { type: Date },
     waitList: { type: Array },
     waitTotal: { type: Number },
     waitAvg: { type: Number },
+    waitMin: { type: Number },
     waitMax: { type: Number },
     utime: { type: Number },
   });

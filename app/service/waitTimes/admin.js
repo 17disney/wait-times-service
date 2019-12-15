@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { arrayAvg } = require('../../utils/array');
+const { arrayAvg, arraySum } = require('../../utils/array');
 
 // 时间粒度计算
 function formatGranularity({ date, startTime, endTime, list, granularity }) {
@@ -129,18 +129,35 @@ module.exports = app => {
               waitList,
               waitListHour,
               waitList10M,
-              waitTotal,
-              waitAvg,
-              waitMax,
+              // waitTotal,
+              // waitAvg,
+              // waitMax,
               utime,
             },
           });
+
+          await this.ctx.model.WaitTimesCounts.update(
+            { id, date, countType: 'day' },
+            {
+              $set: {
+                waitTotal,
+                waitAvg,
+                waitMax,
+              },
+            },
+            {
+              upsert: true,
+            }
+          );
+
+          await this.countByAll(id);
           console.log(`${id}: ok`);
         }
       }
-
+      // 乐园综合统计
       await this.countDest(destItem, { waitList: destWaitList, waitAvg: destWaitAvg });
       console.log(`${date}: ok`);
+
       return { operatingTotal };
     }
 
@@ -176,6 +193,80 @@ module.exports = app => {
           utime,
         },
       });
+    }
+
+    async countByAll(list) {
+      let countTotal = 0;
+      for (const item of list) {
+        const { id } = item;
+        const data = await this.ctx.model.WaitTimesCounts.find({ id, countType: 'day' });
+        if (data && data.length) {
+          const waitAvgList = data.map(_ => _.waitAvg);
+          const waitMaxList = data.map(_ => _.waitMax);
+          const waitTotalList = data.map(_ => _.waitTotal);
+
+          await this.ctx.model.WaitTimesCounts.update(
+            { id, countType: 'all' },
+            {
+              $set: {
+                waitTotal: arraySum(waitTotalList),
+                waitMax: Math.max(...waitMaxList),
+                waitMin: Math.min(...waitAvgList),
+                waitAvg: parseInt(arrayAvg(waitAvgList)),
+              },
+            },
+            {
+              upsert: true,
+            }
+          );
+          countTotal++;
+        }
+      }
+      return {
+        countTotal,
+      };
+    }
+    // TODO
+    async countByWeek(list, { startDate } = {}) {
+      // let countTotal = 0;
+      // 实际开始
+
+      let endDate;
+
+      for (const item of list) {
+        const { id } = item;
+        const list = await this.ctx.model.WaitTimesCounts.find({ id, countType: 'day' });
+        if (list && list.length) {
+          startDate = list[0].date;
+
+
+          list.forEach(item => {
+            const { date } = item;
+
+          });
+
+          const d = moment(startDate, 'YYYY-MM-DD').format('d');
+          if (d === 1) {
+            //
+            itemEnd = moment(startDate, 'YYYY-MM-DD').add(7).format('YYYY-MM-DD');
+          } else {
+            itemEnd = moment(startDate, 'YYYY-MM-DD').add(7 - d).format('YYYY-MM-DD');
+
+          }
+
+          endDate = list[list.length - 1].date;
+        }
+      }
+
+      console.log(endDate);
+    }
+
+    countByMonth(list, { startDate } = {}) {
+      // let countTotal = 0;
+      for (const item of list) {
+        const { id } = item;
+        //
+      }
     }
   }
   return Service;

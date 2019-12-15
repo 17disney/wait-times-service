@@ -152,9 +152,21 @@ module.exports = app => {
       return failList;
     }
 
-    async findByDest(dest) {
-      const data = await this.ctx.model.Destinations.find();
+    async findByDest(dest, { type } = {}) {
+      const query = { dest };
+      if (type) query.type = type;
+      const data = await this.ctx.model.Destinations.find(query);
       return data;
+    }
+
+    async findByCountList(dest) {
+      const data = await this.findByDest(dest, { type: 'Attraction' });
+      return data.map(_ => {
+        return {
+          id: _.id,
+          type: _.type,
+        };
+      });
     }
   }
   return Service;
