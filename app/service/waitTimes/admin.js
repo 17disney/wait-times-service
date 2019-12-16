@@ -1,6 +1,25 @@
 const moment = require('moment');
 const { arrayAvg, arraySum } = require('../../utils/array');
 
+function getWeekEndDate(date) {
+  let d = Number(moment(date).format('d'));
+  d = d === 0 ? 6 : d - 1; // 周一为 0
+  return moment(date).add(d === 6 ? 0 : 6 - d, 'days').format('YYYY-MM-DD');
+}
+
+function countWaitData(data) {
+  const waitAvgList = data.map(_ => _.waitAvg);
+  const waitMaxList = data.map(_ => _.waitMax);
+  const waitTotalList = data.map(_ => _.waitTotal);
+
+  return {
+    waitTotal: arraySum(waitTotalList),
+    waitMax: Math.max(...waitMaxList),
+    waitMin: Math.min(...waitAvgList),
+    waitAvg: parseInt(arrayAvg(waitAvgList)),
+  };
+}
+
 // 时间粒度计算
 function formatGranularity({ date, startTime, endTime, list, granularity }) {
   const startX = Number(moment(`${date} ${startTime}`, 'YYYY-MM-DD HH:mm:ss').format('X'));
@@ -201,19 +220,10 @@ module.exports = app => {
         const { id } = item;
         const data = await this.ctx.model.WaitTimesCounts.find({ id, countType: 'day' });
         if (data && data.length) {
-          const waitAvgList = data.map(_ => _.waitAvg);
-          const waitMaxList = data.map(_ => _.waitMax);
-          const waitTotalList = data.map(_ => _.waitTotal);
-
           await this.ctx.model.WaitTimesCounts.update(
             { id, countType: 'all' },
             {
-              $set: {
-                waitTotal: arraySum(waitTotalList),
-                waitMax: Math.max(...waitMaxList),
-                waitMin: Math.min(...waitAvgList),
-                waitAvg: parseInt(arrayAvg(waitAvgList)),
-              },
+              $set: countWaitData(data),
             },
             {
               upsert: true,
@@ -226,39 +236,31 @@ module.exports = app => {
         countTotal,
       };
     }
-    // TODO
-    async countByWeek(list, { startDate } = {}) {
-      // let countTotal = 0;
-      // 实际开始
 
-      let endDate;
-
-      for (const item of list) {
-        const { id } = item;
+    async countByWeek(atts, { startDate } = {}) {
+      for (const att of atts) {
+        const { id } = att;
         const list = await this.ctx.model.WaitTimesCounts.find({ id, countType: 'day' });
         if (list && list.length) {
-          startDate = list[0].date;
-
-
-          list.forEach(item => {
-            const { date } = item;
-
-          });
-
-          const d = moment(startDate, 'YYYY-MM-DD').format('d');
-          if (d === 1) {
-            //
-            itemEnd = moment(startDate, 'YYYY-MM-DD').add(7).format('YYYY-MM-DD');
-          } else {
-            itemEnd = moment(startDate, 'YYYY-MM-DD').add(7 - d).format('YYYY-MM-DD');
-
+          let itemData = [];
+          for (const item of list) {
+            const date = moment(item.date).format('YYYY-MM-DD');
+            itemData.push(item);
+            if (date === getWeekEndDate(date)) {
+              await this.ctx.model.WaitTimesCounts.update(
+                { id, date, countType: 'week' },
+                {
+                  $set: countWaitData(itemData),
+                },
+                {
+                  upsert: true,
+                }
+              );
+              itemData = [];
+            }
           }
-
-          endDate = list[list.length - 1].date;
         }
       }
-
-      console.log(endDate);
     }
 
     countByMonth(list, { startDate } = {}) {
