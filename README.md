@@ -1,3 +1,3 @@
-# 17Disney Wait-times Service
+# Wait Times Service
 
-17Disney 等候时间时间查询服务
+乐园等候时间查询服务
