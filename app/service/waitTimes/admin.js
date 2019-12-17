@@ -1,6 +1,6 @@
 const moment = require('moment');
 const { arrayAvg, arraySum } = require('../../utils/array');
-
+// 获取星期最后一天
 function getWeekEndDate(date) {
   let d = Number(moment(date).format('d'));
   d = d === 0 ? 6 : d - 1; // 周一为 0
@@ -19,7 +19,6 @@ function countWaitData(data) {
     waitAvg: parseInt(arrayAvg(waitAvgList)),
   };
 }
-
 // 时间粒度计算
 function formatGranularity({ date, startTime, endTime, list, granularity }) {
   const startX = Number(moment(`${date} ${startTime}`, 'YYYY-MM-DD HH:mm:ss').format('X'));
@@ -54,7 +53,6 @@ function formatGranularity({ date, startTime, endTime, list, granularity }) {
       });
     }
   });
-
   return waitList;
 }
 
@@ -108,6 +106,22 @@ module.exports = app => {
       return item;
     }
 
+    async syncByLatest() {
+      const date = moment().format('YYYY-MM-DD');
+      let attList = await this.findByDate(date);
+      if (!attList.length) {
+        // 同步时间表
+        attList = await this.ctx.service.schedules.admin.syncByDate(date);
+        if (!attList.length) return { error: '无法读取时间表' };
+      }
+
+      const params = {
+        utime: 0, // Date.now(),
+      };
+      const scanData = await this.ctx.service.api.disneyScan('waitTimes/today', params);
+      return await this.saveWaitList(date, { scanData, attList });
+    }
+
     async syncByDate(date, { alter = false } = {}) {
       let attList = await this.findByDate(date);
       if (!attList.length) {
@@ -118,6 +132,10 @@ module.exports = app => {
 
       console.log(`${date}: fetchWait...`);
       const scanData = await this.ctx.service.api.disneyScan(`waitTimes/history/${date}`);
+      return await this.saveWaitList(date, { scanData, attList });
+    }
+
+    async saveWaitList(date, { scanData, attList }) {
       console.log(`${date}: fetchWait ok`);
       let operatingTotal = 0;
       const destItem = attList.find(_ => _.type === 'theme-park');
@@ -148,13 +166,10 @@ module.exports = app => {
               waitList,
               waitListHour,
               waitList10M,
-              // waitTotal,
-              // waitAvg,
-              // waitMax,
               utime,
             },
           });
-
+          // 按天统计
           await this.ctx.model.WaitTimesCounts.update(
             { id, date, type: 'day' },
             {
@@ -176,10 +191,10 @@ module.exports = app => {
       // 乐园综合统计
       await this.countDest(destItem, { waitList: destWaitList, waitAvg: destWaitAvg });
       console.log(`${date}: ok`);
-
       return { operatingTotal };
     }
 
+    // 乐园统计
     async countDest(item, { waitList, waitAvg }) {
       const { startTime, endTime } = item;
       const { id, date } = item;

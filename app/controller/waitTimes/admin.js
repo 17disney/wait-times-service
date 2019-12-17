@@ -12,6 +12,8 @@ module.exports = app => {
         for (const date of exportDaterangeList(startDate, endDate)) {
           result.push(await this.ctx.service.waitTimes.admin.syncByDate(date, { dest, alter }));
         }
+      } else if (type === 'latest') {
+        result.push(await this.ctx.service.waitTimes.admin.syncByLatest({ dest }));
       }
 
       this.ctx.body = result;
