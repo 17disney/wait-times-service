@@ -156,7 +156,7 @@ module.exports = app => {
           });
 
           await this.ctx.model.WaitTimesCounts.update(
-            { id, date, countType: 'day' },
+            { id, date, type: 'day' },
             {
               $set: {
                 waitTotal,
@@ -218,10 +218,10 @@ module.exports = app => {
       let countTotal = 0;
       for (const item of list) {
         const { id } = item;
-        const data = await this.ctx.model.WaitTimesCounts.find({ id, countType: 'day' });
+        const data = await this.ctx.model.WaitTimesCounts.find({ id, type: 'day' });
         if (data && data.length) {
           await this.ctx.model.WaitTimesCounts.update(
-            { id, countType: 'all' },
+            { id, type: 'all' },
             {
               $set: countWaitData(data),
             },
@@ -240,7 +240,7 @@ module.exports = app => {
     async countByWeek(atts, { startDate } = {}) {
       for (const att of atts) {
         const { id } = att;
-        const list = await this.ctx.model.WaitTimesCounts.find({ id, countType: 'day' });
+        const list = await this.ctx.model.WaitTimesCounts.find({ id, type: 'day' });
         if (list && list.length) {
           let itemData = [];
           for (const item of list) {
@@ -248,7 +248,7 @@ module.exports = app => {
             itemData.push(item);
             if (date === getWeekEndDate(date)) {
               await this.ctx.model.WaitTimesCounts.update(
-                { id, date, countType: 'week' },
+                { id, date, type: 'week' },
                 {
                   $set: countWaitData(itemData),
                 },

@@ -4,8 +4,8 @@ module.exports = app => {
   const mongoose = app.mongoose;
   const WaitTimesCounts = new mongoose.Schema({
     id: { type: String },
-    countType: { type: String },
-    date: { type: Date },
+    type: { type: String },
+    date: { type: String },
     waitList: { type: Array },
     waitTotal: { type: Number },
     waitAvg: { type: Number },

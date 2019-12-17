@@ -14,6 +14,10 @@ module.exports = app => {
           startDate: { type: 'date', required: true },
           endDate: { type: 'date', required: true },
         },
+        week: {
+          startDate: { type: 'date', required: true },
+          endDate: { type: 'date', required: true },
+        },
       };
     }
 
@@ -50,6 +54,11 @@ module.exports = app => {
         params.startDate = startDate;
         params.endDate = endDate;
         this.ctx.body = await this.ctx.service.waitTimes.list.getByIdDaterange(id, params);
+      } else if (type === 'week') {
+        params.startDate = startDate;
+        params.endDate = endDate;
+        console.log(params);
+        this.ctx.body = await this.ctx.service.waitTimes.counts.getById(id, params);
       }
     }
   }
