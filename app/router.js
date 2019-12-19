@@ -19,4 +19,6 @@ module.exports = app => {
   router.get('/admin/waitTimes/stage', controller.waitTimes.admin.stage);
   router.get('/waitTimes/dest/:dest', controller.waitTimes.list.dest);
   router.get('/waitTimes/id/:id', controller.waitTimes.list.id);
+  // 游玩规划
+  router.post('/plans/virtuals/plays', controller.plans.virtuals.plays);
 };
