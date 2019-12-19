@@ -34,6 +34,13 @@ module.exports = app => {
 
       this.ctx.body = result;
     }
+
+    async stage() {
+      const { id, date } = this.ctx.query;
+
+      // this.ctx.body = await this.ctx.service.waitTimes.stage.getByIdDate(id, date);
+      this.ctx.body = await this.ctx.service.waitTimes.stage.getByDestDate('shanghai', date);
+    }
   }
   return Controller;
 };

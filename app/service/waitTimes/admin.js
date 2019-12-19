@@ -86,8 +86,8 @@ function formatScanWaitList({ date, startTime, endTime, list }) {
   });
 
   return {
-    waitTotal: parseInt(waitTotal / total * ((endX - startX) / 60)),
-    waitAvg: parseInt(waitTotal / total),
+    waitTotal: parseInt(waitTotal / total * ((endX - startX) / 60)) || 0,
+    waitAvg: parseInt(waitTotal / total) || 0,
     waitMax,
     waitList,
   };
@@ -135,6 +135,44 @@ module.exports = app => {
       return await this.saveWaitList(date, { scanData, attList });
     }
 
+    async saveWaitItem({ id, date, startTime, endTime, list }) {
+      const { waitList, waitTotal, waitAvg, waitMax } = formatScanWaitList({ date, startTime, endTime, list });
+      const waitListHour = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 3600 });
+      const waitList10M = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 600 });
+      const lastDate = waitList[waitList.length - 1].date;
+      const utime = moment(lastDate, 'YYYY-MM-DD HH:mm:ss').format('X');
+      await this.ctx.model.WaitTimes.update(
+        { id, date },
+        {
+          $set: {
+            waitList,
+            waitListHour,
+            waitList10M,
+            utime,
+          },
+        },
+        {
+          upsert: true,
+        }
+      );
+      // 按天统计
+      await this.ctx.model.WaitTimesCounts.update(
+        { id, date, type: 'day' },
+        {
+          $set: {
+            waitTotal,
+            waitAvg,
+            waitMax,
+          },
+        },
+        {
+          upsert: true,
+        }
+      );
+
+      return { waitList, waitAvg, waitMax, waitTotal };
+    }
+
     async saveWaitList(date, { scanData, attList }) {
       console.log(`${date}: fetchWait ok`);
       let operatingTotal = 0;
@@ -145,12 +183,8 @@ module.exports = app => {
       for (const item of attList) {
         const { id, startTime, endTime, status } = item;
         if (status === 'Operating' && scanData[id] && scanData[id].length) {
-          const { waitList, waitTotal, waitAvg, waitMax } = formatScanWaitList({ date, startTime, endTime, list: scanData[id] });
-          const waitListHour = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 3600 });
-          const waitList10M = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 600 });
-          const lastDate = waitList[waitList.length - 1].date;
-          const utime = moment(lastDate, 'YYYY-MM-DD HH:mm:ss').format('X');
-
+          const { waitList, waitAvg } = await this.saveWaitItem({ id, date, startTime, endTime, list: scanData[id] });
+          // 乐园统计
           if (!destWaitList.length) {
             destWaitList = waitList;
           } else {
@@ -160,29 +194,6 @@ module.exports = app => {
           }
           operatingTotal++;
           destWaitAvg += waitAvg;
-
-          await this.ctx.model.WaitTimes.update({ id, date }, {
-            $set: {
-              waitList,
-              waitListHour,
-              waitList10M,
-              utime,
-            },
-          });
-          // 按天统计
-          await this.ctx.model.WaitTimesCounts.update(
-            { id, date, type: 'day' },
-            {
-              $set: {
-                waitTotal,
-                waitAvg,
-                waitMax,
-              },
-            },
-            {
-              upsert: true,
-            }
-          );
 
           await this.countByAll(id);
           console.log(`${id}: ok`);

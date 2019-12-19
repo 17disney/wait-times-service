@@ -16,6 +16,7 @@ module.exports = app => {
   // 等候时间
   router.get('/admin/waitTimes/sync', controller.waitTimes.admin.sync);
   router.get('/admin/waitTimes/count', controller.waitTimes.admin.count);
+  router.get('/admin/waitTimes/stage', controller.waitTimes.admin.stage);
   router.get('/waitTimes/dest/:dest', controller.waitTimes.list.dest);
   router.get('/waitTimes/id/:id', controller.waitTimes.list.id);
 };
