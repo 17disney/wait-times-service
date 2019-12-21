@@ -109,6 +109,7 @@ module.exports = app => {
         startTime = endTime;
       });
 
+      console.timeEnd('wait');
       return {
         list: formatPlansView(plans),
         waitTimeTotal,
