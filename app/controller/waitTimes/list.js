@@ -22,7 +22,7 @@ module.exports = app => {
     }
 
     async dest() {
-      const { date, granularity = 'hour' } = this.ctx.query;
+      const { date, granularity = 'hour', dataType = 'list' } = this.ctx.query;
       const { dest = 'shdr' } = this.ctx.params;
       this.ctx.validate(this.paramsBase, this.ctx.query);
       this.ctx.validate(this.paramsRule.date, this.ctx.query);
@@ -33,7 +33,18 @@ module.exports = app => {
         granularity,
       };
 
-      this.ctx.body = await this.ctx.service.waitTimes.list.getByDestDate(params);
+
+      let resData = await this.ctx.service.waitTimes.list.getByDestDate(params);
+
+      if (dataType === 'map') {
+        const data = {}
+        resData.forEach(item => {
+          data[item.id] = item
+        })
+        resData = data
+      }
+
+      this.ctx.body = resData
     }
 
     async id() {
