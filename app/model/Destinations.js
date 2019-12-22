@@ -16,6 +16,7 @@ module.exports = app => {
     medias: { type: Array },
     cacheId: { type: String },
     status: { type: String },
+    info: { type: Object },
     updataAt: { type: Date },
     createAt: { type: Date },
   });

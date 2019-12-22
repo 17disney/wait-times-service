@@ -12,6 +12,7 @@ module.exports = app => {
   router.get('/schedules/date/:date', controller.schedules.list.date);
   // 资料
   router.get('/admin/destinations/sync', controller.destinations.admin.sync);
+  router.put('/admin/destinations/update', controller.destinations.admin.update);
   router.get('/destinations/dest/:dest', controller.destinations.list.dest);
   // 等候时间
   router.get('/admin/waitTimes/sync', controller.waitTimes.admin.sync);
