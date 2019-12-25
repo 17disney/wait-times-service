@@ -19,6 +19,7 @@ module.exports = app => {
   router.get('/admin/waitTimes/count', controller.waitTimes.admin.count);
   router.get('/admin/waitTimes/stage', controller.waitTimes.admin.stage);
   router.get('/waitTimes/dest/:dest', controller.waitTimes.list.dest);
+  router.get('/waitTimes/latest/:dest', controller.waitTimes.list.latest);
   router.get('/waitTimes/id/:id', controller.waitTimes.list.id);
   // 游玩规划
   router.get('/plans/virtuals/readyData', controller.plans.virtuals.readyData);

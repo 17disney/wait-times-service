@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { difference } = require('lodash/array');
 
 const GRANULARITY_LIST = [
@@ -38,8 +39,22 @@ module.exports = app => {
       return data;
     }
 
+    async getByDestLatest(dest) {
+      const date = moment().format('YYYY-MM-DD');
+      const data = await this.ctx.model.WaitTimes.findOne(
+        {
+          dest,
+          date,
+        },
+        {
+          _id: 0,
+          waitList: { $slice: -1 },
+        }
+      );
+      return data;
+    }
+
     async getByIdDate(id, { date, granularity }) {
-      console.log(granularity);
       const gItem = GRANULARITY_LIST.find(_ => _.type === granularity);
       const data = await this.ctx.model.WaitTimes.findOne({
         date,

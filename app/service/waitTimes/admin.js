@@ -116,13 +116,15 @@ module.exports = app => {
       }
 
       const params = {
-        utime: 0, // Date.now(),
+        utime: attList[0].utime,
       };
+      console.log(`${date}: fetchWait...`);
       const scanData = await this.ctx.service.api.disneyScan('waitTimes/today', params);
-      return await this.saveWaitList(date, { scanData, attList });
+      console.log(scanData);
+      return await this.saveWaitList(date, { scanData, attList, append: true });
     }
 
-    async syncByDate(date, { alter = false } = {}) {
+    async syncByDate(date) {
       let attList = await this.findByDate(date);
       if (!attList.length) {
         // 同步时间表
@@ -135,10 +137,39 @@ module.exports = app => {
       return await this.saveWaitList(date, { scanData, attList });
     }
 
-    async saveWaitItem({ id, date, startTime, endTime, list }) {
-      const { waitList, waitTotal, waitAvg, waitMax } = formatScanWaitList({ date, startTime, endTime, list });
+    async countByWaitItem(data) {
+      const { id, date, startTime, endTime, waitList } = data;
       const waitListHour = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 3600 });
       const waitList10M = formatGranularity({ date, startTime, endTime, list: waitList, granularity: 600 });
+
+      await this.updateByIdDate(id, date, {
+        waitListHour,
+        waitList10M,
+      });
+    }
+
+    async updateByDate(date) {
+      const list = await this.findByDate(date);
+      for (const item of list) {
+        await this.countByWaitItem(item);
+      }
+    }
+
+    async updateByIdDate(id, date, saveData) {
+      await this.ctx.model.WaitTimes.update(
+        { id, date },
+        {
+          $set: saveData,
+        },
+        {
+          upsert: true,
+        }
+      );
+
+    }
+
+    async saveWaitItem({ id, date, startTime, endTime, list }) {
+      const { waitList, waitTotal, waitAvg, waitMax } = formatScanWaitList({ date, startTime, endTime, list });
       const lastDate = waitList[waitList.length - 1].date;
       const utime = moment(lastDate, 'YYYY-MM-DD HH:mm:ss').format('X');
       await this.ctx.model.WaitTimes.update(
@@ -146,8 +177,8 @@ module.exports = app => {
         {
           $set: {
             waitList,
-            waitListHour,
-            waitList10M,
+            // waitListHour,
+            // waitList10M,
             utime,
           },
         },
@@ -169,12 +200,10 @@ module.exports = app => {
           upsert: true,
         }
       );
-
       return { waitList, waitAvg, waitMax, waitTotal };
     }
 
-    async saveWaitList(date, { scanData, attList }) {
-      console.log(`${date}: fetchWait ok`);
+    async saveWaitList(date, { scanData, attList, append = false }) {
       let operatingTotal = 0;
       const destItem = attList.find(_ => _.type === 'theme-park');
       let destWaitList = [];
@@ -183,7 +212,9 @@ module.exports = app => {
       for (const item of attList) {
         const { id, startTime, endTime, status } = item;
         if (status === 'Operating' && scanData[id] && scanData[id].length) {
-          const { waitList, waitAvg } = await this.saveWaitItem({ id, date, startTime, endTime, list: scanData[id] });
+          let list = scanData[id];
+          if (append) list = item.waitList.concat(list);
+          const { waitList, waitAvg } = await this.saveWaitItem({ id, date, startTime, endTime, list });
           // 乐园统计
           if (!destWaitList.length) {
             destWaitList = waitList;

@@ -21,6 +21,12 @@ module.exports = app => {
       };
     }
 
+    async latest() {
+      const { dest = 'shdr' } = this.ctx.params;
+      const data = await this.ctx.service.waitTimes.list.getByDestLatest(dest);
+      this.ctx.body = data;
+    }
+
     async dest() {
       const { date, granularity = 'hour', dataType = 'list' } = this.ctx.query;
       const { dest = 'shdr' } = this.ctx.params;
@@ -35,16 +41,15 @@ module.exports = app => {
 
 
       let resData = await this.ctx.service.waitTimes.list.getByDestDate(params);
-
       if (dataType === 'map') {
-        const data = {}
+        const data = {};
         resData.forEach(item => {
-          data[item.id] = item
-        })
-        resData = data
+          data[item.id] = item;
+        });
+        resData = data;
       }
 
-      this.ctx.body = resData
+      this.ctx.body = resData;
     }
 
     async id() {
